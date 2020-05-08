@@ -1,0 +1,141 @@
+[{
+    "id": 0,
+    "name": "Plan Basico",
+    "price": 0,
+    "offer": "Sin costo mensual",
+    "desc": "Para una tienda online sencilla e impresionante",
+    "specs": [
+        {
+            "id": 0,
+            "name": "Comisión: 13%",
+            "desc": "Además de esta comisión, se cobran las comisiones del procesador de pago MercadoPago (2% - 5,9%)."
+        },{
+            "id": 1,
+            "name": "Carga de productos: 0",
+            "desc": "No cargamos productos por usted, pero si lo requiere le explicamos cómo puede hacerlo."
+        },{
+            "id": 2,
+            "name": "Procesador de Pago: MP",
+            "desc": "Este plan solo incluye el procesador de pago de MercadoPago."
+        },{
+            "id": 3,
+            "name": "Diseño personalizado: Poco",
+            "desc": "Puedes personalizar la tienda pero las opciones son limitadas."
+        },{
+            "id": 4,
+            "name": "SEO personalizable: No",
+            "desc": "No se puede modificar el SEO. Esto influye en tus posibilidades para aparecer en los resultados de los motores de búsqueda."
+        },{
+            "id": 5,
+            "name": "Canales de venta: 3",
+            "desc": "Puedes vincular Instagram Shopping, WhatsApp y Facebook Store a tu tienda online para mejorar el rendimiento."
+        }
+    ]
+},{
+    "id": 1,
+    "name": "Plan Inicial",
+    "price": 799,
+    "offer": "30 días gratis",
+    "desc": "Tu tienda lista con todo lo esencial para vender",
+    "specs": [
+        {
+            "id": 0,
+            "name": "Comisión: 2%",
+            "desc": "Además de esta comisión, se cobran las comisiones del procesador de pago que utilices."
+        },{
+            "id": 1,
+            "name": "Carga de productos: 5",
+            "desc": "Si así lo requiere, cargamos hasta 5 productos por usted, además le explicamos cómo puede hacerlo."
+        },{
+            "id": 2,
+            "name": "Procesador de Pago: Todos",
+            "desc": "Puede elegir el procesador de pago que quiera."
+        },{
+            "id": 3,
+            "name": "Diseño personalizado",
+            "desc": "Gran variedad de herramientas para la edición del diseño de tu tienda online sin necesidad de conocimientos de diseño ni programación."
+        },{
+            "id": 4,
+            "name": "SEO personalizable: Si",
+            "desc": "Se puede modificar el SEO para mejorar tus posibilidades de aparecer en los resultados de los motores de búsqueda."
+        },{
+            "id": 5,
+            "name": "Canales de venta: 4",
+            "desc": "Puedes vincular Instagram Shopping, WhatsApp, Facebook Store y Google Shopping a tu tienda online para mejorar el rendimiento."
+        }
+    ]
+},{
+    "id": 2,
+    "name": "Plan Avanzado",
+    "price": 1999,
+    "offer": "30 días gratis",
+    "desc": "Obtené madurez para vender más y posicionar tu marca",
+    "specs": [
+        {
+            "id": 0,
+            "name": "Comisión: 1%",
+            "desc": "Además de esta comisión, se cobran las comisiones del procesador de pago que utilices."
+        },{
+            "id": 1,
+            "name": "Carga de productos: 5",
+            "desc": "Si así lo requiere, cargamos hasta 5 productos por usted, además le explicamos cómo puede hacerlo."
+        },{
+            "id": 2,
+            "name": "Procesador de Pago: Todos",
+            "desc": "Puede elegir el procesador de pago que quiera."
+        },{
+            "id": 3,
+            "name": "Diseño personalizado",
+            "desc": "Gran variedad de herramientas para la edición del diseño de tu tienda online sin necesidad de conocimientos de diseño ni programación."
+        },{
+            "id": 4,
+            "name": "SEO personalizable: Si",
+            "desc": "Se puede modificar el SEO para mejorar tus posibilidades de aparecer en los resultados de los motores de búsqueda."
+        },{
+            "id": 5,
+            "name": "Canales de venta: 5",
+            "desc": "Puedes vincular Instagram Shopping, WhatsApp, Facebook Store, Google Shopping y MercadoLibre a tu tienda online para mejorar el rendimiento."
+        }
+    ]
+},{
+    "id": 2,
+    "name": "Plan Experto",
+    "price": 2499,
+    "offer": "90 días gratis",
+    "desc": "Obtené madurez para vender más y posicionar tu marca",
+    "specs": [
+        {
+            "id": 0,
+            "name": "Comisión: 0%",
+            "desc": "No se cobran comisiones por venta, solo se cobran las comisiones del procesador de pago que utilices."
+        },{
+            "id": 1,
+            "name": "Carga de productos: 10",
+            "desc": "Si así lo requiere, cargamos hasta 10 productos por usted, además le explicamos cómo puede hacerlo."
+        },{
+            "id": 2,
+            "name": "Procesador de Pago: Todos",
+            "desc": "Puede elegir el procesador de pago que quiera."
+        },{
+            "id": 3,
+            "name": "Diseño personalizado",
+            "desc": "Gran variedad de herramientas para la edición del diseño de tu tienda online sin necesidad de conocimientos de diseño ni programación."
+        },{
+            "id": 4,
+            "name": "SEO personalizable: Si",
+            "desc": "Se puede modificar el SEO para mejorar tus posibilidades de aparecer en los resultados de los motores de búsqueda."
+        },{
+            "id": 5,
+            "name": "Canales de venta: 7",
+            "desc": "Puedes vincular Instagram Shopping, WhatsApp, Facebook Store, Google Shopping, MercadoLibre, Amazon y eBay a tu tienda online para mejorar el rendimiento."
+        },{
+            "id": 6,
+            "name": "Dropshipping",
+            "desc": "Este plan es ideal y contiene las capacidades para realizar dropshipping facilmente."
+        },{
+            "id": 7,
+            "name": "Blog incluído",
+            "desc": "Este plan permite la creación de un blog integrado dentro de tu tienda, una forma excelente para hacer Marketing de Contenidos."
+        }
+    ]
+}]

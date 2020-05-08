@@ -1,0 +1,31 @@
+body, html{
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.container{
+    max-width: 1140px;
+    padding-right: 48px!important;
+    padding-left: 48px!important;
+    margin: auto;
+}
+@media (max-width: 425px){
+    .container{
+        padding-right: 32px!important;
+        padding-left: 32px!important;        
+    }
+}
+
+.noBg{
+    background: unset!important;
+}
+.ant-popover-inner-content{
+    max-width: 300px;
+}
+.popover_planes{
+    border-bottom: 1px dotted rgba(121,121,121,.35);
+    padding: 0 2px;
+}
+.popover_planes:hover{
+    cursor: help;
+}

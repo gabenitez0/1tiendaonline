@@ -1,0 +1,17 @@
+[
+    {
+        "id": 0,
+        "name": "Inicio",
+        "url": "/"
+    },
+    {
+        "id": 1,
+        "name": "Planes",
+        "url": "/planes"
+    },
+    {
+        "id": 2,
+        "name": "Sponsors",
+        "url": "/sponsors"
+    }
+]

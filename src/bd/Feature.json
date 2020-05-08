@@ -1,0 +1,44 @@
+[
+    {
+        "platform": {
+            "id": 0,
+            "image":{
+                "src": "https://d1rv23qj5kas56.cloudfront.net/img/portal-2015/lp/lp-eshop-article-01-es.jpg",
+                "alt": "Plataforma de comercio online super sencilla e intuitiva"
+            },
+            "comment": "¡Super fácil!",
+            "title": "Plataforma de comercio online super sencilla e intuitiva",
+            "desc": "Vender online puede ser fácil. Configura tu tienda, describe los productos y añade imágenes en sólo unos clics. Sin necesidad de contratar a un programador o diseñador."
+        },
+        "design": {
+            "id": 1,
+            "image":{
+                "src": "https://d1rv23qj5kas56.cloudfront.net/img/portal-2015/lp/lp-eshop-article-02-es.png",
+                "alt": "Diseño atractivo y moderno para tu tienda online"
+            },
+            "comment": "Diseños profesionales",
+            "title": "Diseño atractivo y moderno para tu tienda online",
+            "desc": "Nuestras plantillas están preparadas con productos y textos que te ayudarán a abrir tu tienda. Puedes personalizar cada plantilla fácilmente para adaptarla a lo que necesitas."
+        },
+        "pedidos": {
+            "id": 2,
+            "image":{
+                "src": "https://d1rv23qj5kas56.cloudfront.net/img/portal-2015/lp/lp-eshop-article-03-es.png",
+                "alt": "Gestiona tus pedidos con facilidad"
+            },
+            "comment": "Gestión simple y eficiente",
+            "title": "Gestiona tus pedidos con facilidad",
+            "desc": "Ofrece a tus clientes pagar con tarjeta de crédito, MercadoPago o transferencia. Comprueba el estado de tus pedidos, cuáles se han pagado o cuántos hay que enviar."
+        },
+        "rendimiento": {
+            "id": 3,
+            "image":{
+                "src": "https://d1rv23qj5kas56.cloudfront.net/img/portal-2015/lp/lp-eshop-article-04-es.png",
+                "alt": "Mide el rendimiento de tu tienda online"
+            },
+            "comment": "Analítica web y de negocio",
+            "title": "Mide el rendimiento de tu tienda online",
+            "desc": "Comprueba cuántas visitas tiene, cuáles son los productos más populares y los clientes más rentables. Conecta Google Analytics para obtener una perspectiva aún más detallada."
+        }
+    }
+]

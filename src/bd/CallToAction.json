@@ -1,0 +1,18 @@
+[{
+    "verPlanes":{
+        "id": 0,
+        "title": "Tu propia tienda online hoy",
+        "desc": "Gestión simple, diseño atractivo, prueba gratis",
+        "button": "Ver planes",
+        "url": "/planes",
+        "onClick": false
+    },
+    "empezarAhora":{
+        "id": 1,
+        "title": "Tu propia tienda online ahora",
+        "desc": "Gestión simple, diseño atractivo, prueba gratis",
+        "button": "Empezar ahora",
+        "url": "?empezar",
+        "onClick": "showDrawer"
+    }
+}]
