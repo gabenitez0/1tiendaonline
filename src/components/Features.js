@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Fade from 'react-reveal/Fade';
 
 //DEPENDENCIAS
@@ -7,25 +7,26 @@ const {Content} = Layout;
 const {Text, Title} = Typography;
 
 
-export default function Features (props) {
+export default function Features ({ feature }) {
     const [dataFeature, setDataFeature] = useState([]);
     useEffect(() => {
         async function dataFeature() {
-        const res = await fetch('https://api.1tiendaonline.com/'+props.feature)
-        const data = await res.json();
-        setDataFeature(data)
+            const res = await fetch('https://api.1tiendaonline.com/' + feature)
+            const data = await res.json();
+            setDataFeature(data)
         }
-        dataFeature()
-    }, [])
+        
+        dataFeature();
+    }, [feature])
     
-    const feature = {
+    const featureStyles = {
         margin: '12vh auto'
     }
 
     return (
         dataFeature.map(e =>
             <section id="feature" style={{background: e.rowReverse ? '#f7fbff' : '#fff'}} key={e.id}>
-                <Content className="container" style={feature}>
+                <Content className="container" style={featureStyles}>
                     <Row align="middle" style={{flexDirection:  e.rowReverse === true ? 'row-reverse' : 'row'}}>
                         <Col md={12}>
                         <Fade bottom>

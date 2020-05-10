@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Fade from 'react-reveal/Fade';
 
 //DEPENDENCIAS
@@ -11,11 +11,11 @@ export default function Header() {
     const [data, setData] = useState([]);
     useEffect(() => {
         async function data() {
-        const res = await fetch('https://api.1tiendaonline.com/header/')
-        const dataJson = await res.json();
-        setData(dataJson)
+            const res = await fetch('https://api.1tiendaonline.com/header/')
+            const dataJson = await res.json();
+            setData(dataJson);
         }
-        data()
+        data();
     }, [])
 
     const headerBg = {
@@ -28,7 +28,7 @@ export default function Header() {
         alignItems: 'center'
     }
 
-    const api = "https://api.1tiendaonline.com"
+    const api = "https://api.1tiendaonline.com";
     
     return (
         <section id="header" style={headerBg}>

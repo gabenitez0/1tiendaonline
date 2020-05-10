@@ -1,15 +1,34 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useContext } from 'react'
 
-import {Typography, Space, Select, Row, Col, InputNumber, Dropdown, Button, Menu} from 'antd';
-const {Text} = Typography;
+import { contextoGlobal } from '../../../estado/contextoGlobal';
+
+import { Typography, Select, Row, Col } from 'antd';
+const { Text } = Typography;
 const { Option } = Select
 
 export default function SelectPlan(props) {
+
+    const context = useContext(contextoGlobal)
 
     const [price, setPrice] = useState(0);
     /* useEffect(() => {
         console.log(price)
     }) */
+
+    const handleOnChange = (value, {children}) => {
+        setPrice(value);
+        context.dispatch({
+            type: 'establecerPlan',
+            payload: {
+                plan: children,
+                total: value 
+            }
+        });
+
+        context.dispatch({
+            type: 'estimarTotal'
+        });
+    }
 
     return (
         <Row gutter={[32, 8]}>
@@ -20,9 +39,11 @@ export default function SelectPlan(props) {
                 <Row align="middle" justify="space-between">
                     <Col span={12}>
                         <Select 
-                            defaultValue="Seleccionar" 
+                            defaultValue={context.orden.planTienda.plan !== undefined ? context.orden.planTienda.plan : "Seleccionar"}
                             style={{width: 200}}
-                            onChange={e => setPrice(e)}>
+                            onChange={(value, option) => handleOnChange(value, option) }
+                            
+                        >    
                         {props.data.map(e =>
                             <Option 
                                 key={e.id}
@@ -37,7 +58,9 @@ export default function SelectPlan(props) {
                         </Select>
                     </Col>
                     <Col span={6} style={{textAlign: "right"}}>
-                        <Text>${price}<sub style={{bottom: '-1px'}}>/mes</sub></Text>
+                        <Text>
+                            ${ context.orden.planTienda.total !== undefined ? context.orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
+                        </Text>
                     </Col>
                 </Row>
             </Col>

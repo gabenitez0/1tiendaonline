@@ -1,23 +1,29 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+import { contextoGlobal } from '../../estado/contextoGlobal';
+
 import SelectPlan from './components/SelectPlan';
 import SelectGraphicDesign from './components/SelectGraphicDesign';
-import {Form, Space, Drawer, Steps, Divider, Button, Row, Col, Typography} from 'antd';
-const {Text} = Typography;
+
+import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography } from 'antd';
+const { Text } = Typography;
 const { Step } = Steps;
 
-
 export default function OrderPlan (props) {
-  const {visible, setVisible} = props.visibleState
+  const {visible, setVisible} = props.visibleState;
 
   const [dataPlanes, setdataPlanes] = useState([]);
+
+  const context = useContext(contextoGlobal);
+
   useEffect(() => {
       async function dataPlanes() {
-      const res = await fetch('https://api.1tiendaonline.com/planes/')
-      const data = await res.json();
-      setdataPlanes(data)
+        const res = await fetch('https://api.1tiendaonline.com/planes/')
+        const data = await res.json();
+        setdataPlanes(data);
       }
-      dataPlanes()
-  }, [])
+      dataPlanes();
+  }, []);
   
   const steps = [
     {
@@ -34,32 +40,48 @@ export default function OrderPlan (props) {
     },
   ];
 
+  // eslint-disable-next-line
   const [step, setStep] = useState(0);
 
-  function next() {
-      const current = step + 1;
-      setStep(current);
-  }
-  function prev() {
-      const current = step - 1;
-      setStep(current);
-  }
+  // function next() {
+  //     const current = step + 1;
+  //     setStep(current);
+  // }
+  // function prev() {
+  //     const current = step - 1;
+  //     setStep(current);
+  // }
 
   const responsive = window.innerWidth < "500"
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
+
+  const handleOnDrawerClose = () => {
+    console.log('el drawer se cerro');
+    setVisible(false);
+  }
+
+  const handleafterVisibleChange = () => {
+    if(visible) {
+    }
+  }
 
   return (
     <Drawer
       title={"Armá tu plan: " + steps[step].content}
       placement="right"
       closable={window.innerWidth < "600" ? true : false}
-      onClose={() => setVisible(false)}
+      onClose={handleOnDrawerClose}
+      afterVisibleChange={handleafterVisibleChange}
       visible={visible}
       width={responsive ? "100%" : "500px"}
       footer={
         <Row justify="space-between" align="middle">
-          <Col><Text>Subtotal: $1000</Text></Col>
-          <Col><Button type="primary">Continuar</Button></Col>
+          <Col>
+      <Text>Subtotal: ${context.orden.costoTotal}</Text>
+          </Col>
+          <Col>
+            <Button type="primary">Continuar</Button>
+          </Col>
         </Row>}
     >
       <Steps current={step} size="small">
@@ -72,7 +94,7 @@ export default function OrderPlan (props) {
 
       <Form>
         <Form.Item>
-          <SelectPlan data={dataPlanes} responsive={responsive}/>
+          <SelectPlan data={dataPlanes} responsive={responsive} />
         </Form.Item>
 
         <Divider style={plain}>Diseño Gráfico</Divider>

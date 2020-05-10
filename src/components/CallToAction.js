@@ -29,6 +29,7 @@ export default function CallToAction() {
         background: 'white'
     }
 
+
     return (
         <Fade>
         <section id="calltoaction" style={calltoaction} key={dataCta.id}>

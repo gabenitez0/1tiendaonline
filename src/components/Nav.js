@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { contextoGlobal } from '../estado/contextoGlobal';
+
 import {Link} from 'react-router-dom';
 
 import logo from '../assets/img/logo.png';
@@ -8,6 +10,8 @@ const {Header} = Layout;
 
 export default function Nav (props) {
   
+  const { orden } = useContext(contextoGlobal);
+
   const [navItems, setItems] = useState([]);
   useEffect(() => {
     async function navItems() {
@@ -48,7 +52,9 @@ export default function Nav (props) {
               <Row justify="end">
                 <Space>
                   <Button type="link">Contacto</Button>
-                  <Button type="primary" onClick={() => props.setVisible(true)}>Empezar ahora</Button>
+                  <Button type="primary" onClick={() => props.setVisible(true)}>
+                    {orden.costoTotal > 0 ? 'Continuar' : 'Empezar'}
+                  </Button>
                 </Space>
               </Row>
             </Col>

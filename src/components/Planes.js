@@ -47,7 +47,7 @@ export default function Planes(props) {
                     <Button 
                         type="primary" 
                         style={{marginTop: '8px'}} 
-                        onClick={() => props.setVisible(true)}
+                        onClick={() => null}
                     >
                         Empezar
                     </Button>

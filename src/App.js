@@ -1,6 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState, useReducer } from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
+// CONTEXT
+import { contextoGlobal } from './estado/contextoGlobal';
+import { ordenReducer, estadoInicial } from './estado/ordenReducer';
 //DEPENDENCIAS
 import { Spin } from 'antd';
 
@@ -20,12 +23,13 @@ const OrderPlan = React.lazy(() => import("./components/order/OrderPlan"));
 /* import Page404 from './mixins/Page404';
 import ScrollToTop from './mixins/ScrollToTop'; */
 const Page404 = React.lazy(() => import("./mixins/Page404"));
-const ScrollToTop = React.lazy(() => import("./mixins/ScrollToTop"));
-
+const ScrollToTopComponent = React.lazy(() => import("./mixins/ScrollToTop"));
 
 export default function App() {
 
-  const [visible, setVisible] = useState()
+  const [orden, dispatch] = useReducer(ordenReducer, estadoInicial); 
+
+  const [visible, setVisible] = useState();
 
   const spin = {
     height: '100vh', 
@@ -39,16 +43,20 @@ export default function App() {
     <React.Suspense fallback={<div style={spin}><Spin tip="1tiendaonline"/></div>}>
     <Layout style={{background: 'linear-gradient(-35deg, #f7fbff, white)'}}>
       <Router>
-        <ScrollToTop/>
-        <Nav setVisible={setVisible}/>
-        <Switch>
-          <Route exact path='/' component={Index}/>
-          <Route exact path='/planes' component={Planes}/>
-          <Route exact path='/web-design' component={WebDesign}/>
-          <Route><Page404/></Route>
-        </Switch>
-        <Footer/>
-        <OrderPlan visibleState={{visible, setVisible}} />
+        <ScrollToTopComponent />
+        <contextoGlobal.Provider value={{ orden: orden, dispatch: dispatch }}>
+          <Nav setVisible={setVisible}/>
+          <Switch>
+              <Route exact path='/' component={Index}/>
+              <Route exact path='/planes' component={Planes}/>
+              <Route exact path='/web-design' component={WebDesign}/>
+              <Route>
+                <Page404/>
+              </Route>
+          </Switch>
+          <Footer/>
+          <OrderPlan visibleState={{visible, setVisible}} />
+        </contextoGlobal.Provider>
       </Router>
     </Layout>
     </React.Suspense>
