@@ -7,6 +7,8 @@ import { ordenReducer, estadoInicial } from './estado/ordenReducer';
 //DEPENDENCIAS
 import { Spin } from 'antd';
 
+import OrderPlan from './components/order/OrderPlan';
+
 //PAGES
 const Index = React.lazy(() => import('./pages/index'));
 const WebDesign = React.lazy(() => import('./pages/web-design'));
@@ -17,7 +19,7 @@ const Nav = React.lazy(() => import('./components/Nav'));
 /* const Header = React.lazy(() => import('./components/Header')); */
 const Footer = React.lazy(() => import('./components/Footer'));
 const Planes = React.lazy(() => import("./components/Planes"));
-const OrderPlan = React.lazy(() => import("./components/order/OrderPlan"));
+
 
 //MIXINS
 /* import Page404 from './mixins/Page404';
@@ -45,6 +47,7 @@ export default function App() {
       <Router>
         <ScrollToTopComponent />
         <contextoGlobal.Provider value={{ orden: orden, dispatch: dispatch }}>
+          <OrderPlan visibleState={{visible, setVisible}} />
           <Nav setVisible={setVisible}/>
           <Switch>
               <Route exact path='/' component={Index}/>
@@ -55,7 +58,7 @@ export default function App() {
               </Route>
           </Switch>
           <Footer/>
-          <OrderPlan visibleState={{visible, setVisible}} />
+          
         </contextoGlobal.Provider>
       </Router>
     </Layout>

@@ -21,25 +21,45 @@ export const ordenReducer = (state, action) => {
         // localStorage.setItem('state', JSON.stringify({ ...state, planTienda: {...action.payload} }));
       return { ...state, planTienda: {...action.payload} };
 
+    case 'solicitarAyuda':
+        const servicioAModificar = state.serviciosDiseno.find(servicio => servicio.id === action.payload.id);
+        const serviciosFiltrados = state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id);
+        const servicioDisenoModificado = {
+          ...state,
+          serviciosDiseno: [
+            ...serviciosFiltrados,
+            {
+              ...servicioAModificar,
+              necesitaAyuda: true,
+              cantidad: 0,
+              total: 0
+            }
+          ]
+        }
+        
+      return servicioDisenoModificado;
+
     case 'agregarServiciosDiseno':
         localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: [...state.serviciosDiseno, action.payload]}));
       return {...state, serviciosDiseno: [...state.serviciosDiseno, action.payload]};
 
     case 'agregarCantidadPrecio':
       
-      const servicioModificado = state.serviciosDiseno.find(servicio => servicio.id === Number(action.payload.id));
-      const serviciosLimpios = state.serviciosDiseno.filter(servicio => servicio.id !== Number(action.payload.id));
+      const servicioModificado = state.serviciosDiseno.find(servicio => servicio.id === action.payload.id);
+      const serviciosLimpios = state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id);
 
       localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: [...serviciosLimpios, {
         ...servicioModificado,
         cantidad: action.payload.cantidad,
-        total: action.payload.total
+        total: action.payload.total,
+        necesitaAyuda: false
       }]}));
 
     return {...state, serviciosDiseno: [...serviciosLimpios, {
       ...servicioModificado,
       cantidad: action.payload.cantidad,
-      total: action.payload.total
+      total: action.payload.total,
+      necesitaAyuda: false,
     }]};
 
     case 'eliminarServiciosDiseno':
@@ -48,8 +68,7 @@ export const ordenReducer = (state, action) => {
         serviciosDiseno: state.serviciosDiseno.filter(servicio => {
           return servicio.id !== action.payload.id
         })};
-
-        // localStorage.setItem('state', JSON.stringify(lastState));
+        localStorage.setItem('state', JSON.stringify(lastState));
       return lastState;
 
     case 'estimarTotal':

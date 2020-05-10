@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
 import SelectPlan from './components/SelectPlan';
-import SelectGraphicDesign from './components/SelectGraphicDesign';
+import SelectPlanDesign from './components/SelectGraphicDesign';
 
 import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography } from 'antd';
 const { Text } = Typography;
@@ -14,16 +14,23 @@ export default function OrderPlan (props) {
 
   const [dataPlanes, setdataPlanes] = useState([]);
 
-  const context = useContext(contextoGlobal);
+  const [dataDesign, setDataDesign] = useState([]);
 
   useEffect(() => {
+      fetch('https://api.1tiendaonline.com/graphic-designs')
+      .then(data => data.json())
+      .then(data => setDataDesign(data));
+
       async function dataPlanes() {
         const res = await fetch('https://api.1tiendaonline.com/planes/')
         const data = await res.json();
+
         setdataPlanes(data);
       }
       dataPlanes();
   }, []);
+
+  const context = useContext(contextoGlobal);
   
   const steps = [
     {
@@ -62,6 +69,7 @@ export default function OrderPlan (props) {
 
   const handleafterVisibleChange = () => {
     if(visible) {
+
     }
   }
 
@@ -80,7 +88,7 @@ export default function OrderPlan (props) {
       <Text>Subtotal: ${context.orden.costoTotal}</Text>
           </Col>
           <Col>
-            <Button type="primary">Continuar</Button>
+            <Button type="primary" onClick={() => console.log(context.orden)} >Continuar</Button>
           </Col>
         </Row>}
     >
@@ -100,7 +108,7 @@ export default function OrderPlan (props) {
         <Divider style={plain}>Diseño Gráfico</Divider>
 
         <Form.Item>
-          <SelectGraphicDesign title="diseño" responsive={responsive}/>
+          <SelectPlanDesign title="diseño" responsive={responsive} values={dataDesign} />
         </Form.Item>
 
         <Divider style={plain}>Publicidad y Marketing</Divider>
