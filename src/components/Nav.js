@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 
 import logo from '../assets/img/logo.png';
 
-import {Space, Button, Row, Col, Layout} from 'antd';
+import {Space, Button, Row, Col, Layout, Divider} from 'antd';
 const {Header} = Layout;
 
 export default function Nav (props) {
@@ -27,10 +27,16 @@ export default function Nav (props) {
     width: 'auto',
     maxHeight: '28px',
     height: 'auto',
-    marginRight: '26px'
+    marginRight: '16px',
+    position: 'relative',
+    top: '-4px'
   }
   const navBg = {
     background: '#fff',
+  }
+  const buttonStyle = {
+    position: 'relative',
+    top: '4px'
   }
 
   return (
@@ -43,16 +49,17 @@ export default function Nav (props) {
                 {navItems.map(e => 
                 <Link 
                   to={e.url}
-                  key={e.id}>
-                  <Button type="link">{e.name}</Button>
+                  key={e.id}
+                  style={buttonStyle}>
+                <Divider type="vertical"/><Button type="link">{e.name}</Button>
                 </Link>)}
               </Space>
             </Col>
             <Col span={8}>
               <Row justify="end">
                 <Space>
-                  <Button type="link">Contacto</Button>
-                  <Button type="primary" onClick={() => props.setVisible(true)}>
+                  <Button type="link" style={buttonStyle}>Contacto</Button>
+                  <Button type="primary" style={buttonStyle} onClick={() => props.setVisible(true)}>
                     {orden.costoTotal > 0 ? 'Continuar' : 'Empezar'}
                   </Button>
                 </Space>
