@@ -7,7 +7,7 @@ const CallToAction = React.lazy(() => import('../components/CallToAction'));
 export default function index() {
     return (
         <Fragment>
-            <Header/>
+            <Header page="header-wd"/>
             <Features feature="web-designs"/>
             <CallToAction/>
         </Fragment>

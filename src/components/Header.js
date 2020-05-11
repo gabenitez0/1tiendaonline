@@ -7,11 +7,11 @@ import { Layout, Row, Typography, Button, Col, Space } from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
-export default function Header() {
+export default function Header(props) {
     const [data, setData] = useState([]);
     useEffect(() => {
         async function data() {
-            const res = await fetch('https://api.1tiendaonline.com/header/')
+            const res = await fetch('https://api.1tiendaonline.com/'+props.page)
             const dataJson = await res.json();
             setData(dataJson);
         }
@@ -41,14 +41,12 @@ export default function Header() {
                             srcSet={`
                             ${(api+data.image.formats.thumbnail.url)} 300w,
                             ${(api+data.image.formats.small.url)} 500w,
-                            ${(api+data.image.formats.medium.url)} 750w,
                             ${(api+data.image.url)} 1000w`}
                             sizes="
                                 (max-width: 300w) 300w,
                                 (max-width: 500w) 500w,
-                                (max-width: 750px) 750px,
                                 1000px"
-                            src={api+data.image.formats.medium.url} 
+                            src={api+data.image.url} 
                             alt={data.image.alternativeText}
                             style={{width: '100%', maxWidth: '600px', margin: '16px 4vw'}}/>
                             
