@@ -71,7 +71,34 @@ export const ordenReducer = (state, action) => {
         localStorage.setItem('state', JSON.stringify(lastState));
       return lastState;
 
-    case 'estimarTotal':
+      case 'agregarServiciosPublicidad':
+        localStorage.setItem('state', JSON.stringify({...state, serviciosPublicidad: [
+          ...state.serviciosPublicidad,
+          action.payload
+        ]}));
+        return {...state, serviciosPublicidad: [
+          ...state.serviciosPublicidad,
+          action.payload
+        ]};
+
+      case 'eliminarServiciosPublicidad':
+        localStorage.setItem('state', JSON.stringify({...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id)}));
+        return {...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id)};
+
+      case 'modificarServicioPublicidad':
+        const servicioPublicidadActualizado = {
+          ...state.serviciosPublicidad.find(servicio => servicio.id === action.payload.id),
+          time: action.payload.time,
+          total: action.payload.price
+        };
+        
+        const serviciosPublicidadActualizados = state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id);
+        return {
+          ...state,
+          serviciosPublicidad: [...serviciosPublicidadActualizados, servicioPublicidadActualizado]
+        };
+    
+      case 'estimarTotal':
       const totalPlan = state.planTienda.total !== undefined ? Number(state.planTienda.total) : 0;
 
       const totalServiciosDiseno = state.serviciosDiseno.length !== 0 

@@ -4,6 +4,7 @@ import { contextoGlobal } from '../../estado/contextoGlobal';
 
 import SelectPlan from './components/SelectPlan';
 import SelectPlanDesign from './components/SelectGraphicDesign';
+import SelectMarketingServices from './components/SelectMarketingServices';
 
 import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography } from 'antd';
 const { Text } = Typography;
@@ -16,10 +17,16 @@ export default function OrderPlan (props) {
 
   const [dataDesign, setDataDesign] = useState([]);
 
+  const [dataMarketing, setDataMarketing] = useState([]);
+
   useEffect(() => {
       fetch('https://api.1tiendaonline.com/graphic-designs')
       .then(data => data.json())
       .then(data => setDataDesign(data));
+
+      fetch('https://api.1tiendaonline.com/marketings')
+        .then(res => res.json())
+        .then(data => setDataMarketing(data));
 
       async function dataPlanes() {
         const res = await fetch('https://api.1tiendaonline.com/planes/')
@@ -113,9 +120,9 @@ export default function OrderPlan (props) {
 
         <Divider style={plain}>Publicidad y Marketing</Divider>
 
-       {/*  <Form.Item>
-          <SelectGraphicDesign title="publicidad" responsive={responsive}/>
-        </Form.Item> */}
+        <Form.Item>
+          <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
+        </Form.Item>
 
       </Form>
     </Drawer>
