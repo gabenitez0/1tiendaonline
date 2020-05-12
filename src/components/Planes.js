@@ -24,7 +24,7 @@ export default function Planes(props) {
     const planes = {
         textAlign: 'center',
         margin: '32px 0',
-        minHeight: '85vw'
+        minHeight: '85vh'
     }
     const plan = {
         background: '#fafdff',

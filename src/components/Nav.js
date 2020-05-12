@@ -5,8 +5,9 @@ import {Link} from 'react-router-dom';
 
 import logo from '../assets/img/logo.png';
 
-import {Space, Button, Row, Col, Layout, Divider} from 'antd';
+import {Space, Button, Row, Col, Layout, Divider, Typography} from 'antd';
 const {Header} = Layout;
+const { Text } = Typography;
 
 export default function Nav (props) {
   
@@ -34,32 +35,43 @@ export default function Nav (props) {
   const navBg = {
     background: '#fff',
   }
-  const buttonStyle = {
+  const navStyle = {
     position: 'relative',
     top: '4px'
+  }
+  const navLinkStyle = {
+    padding: '8px 0'
+  }
+
+  
+  const responsive = {
+    color: 'gray'
   }
 
   return (
     <section id="nav" style={navBg}>
         <Header className="container noBg">
           <Row>
-            <Col span={16}>
-              <Space>
+            <Col span={18}>
                 <img src={logo} alt="logo" style={logoSyle}/>
-                {navItems.map(e => 
-                <Link 
-                  to={e.url}
-                  key={e.id}
-                  style={buttonStyle}>
-                <Divider type="vertical"/><Button type="link">{e.name}</Button>
-                </Link>)}
-              </Space>
+                <Space align="center" size="0">
+                {navItems.map(e =>
+                <div style={navStyle}>
+                  <Divider type="vertical"/>
+                  <Link 
+                    to={e.url}
+                    key={e.id}
+                    style={navLinkStyle}>
+                      <Button size="small" type="link"><Text strong>{e.name}</Text></Button>
+                  </Link>
+                </div>)}
+                </Space>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Row justify="end">
                 <Space>
-                  <Button type="link" style={buttonStyle}>Contacto</Button>
-                  <Button type="primary" style={buttonStyle} onClick={() => props.setVisible(true)}>
+                  <Button type="link" style={navStyle}><Text strong>Contacto</Text></Button>
+                  <Button type="primary" style={navStyle} onClick={() => props.setVisible(true)}>
                     {orden.costoTotal > 0 ? 'Continuar' : 'Empezar'}
                   </Button>
                 </Space>
