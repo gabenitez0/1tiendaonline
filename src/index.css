@@ -11,8 +11,8 @@ body, html{
 }
 @media (max-width: 425px){
     .container{
-        padding-right: 32px!important;
-        padding-left: 32px!important;        
+        padding-right: 16px!important;
+        padding-left: 16px!important;        
     }
 }
 
