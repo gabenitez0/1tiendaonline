@@ -42,6 +42,10 @@ export default function Nav (props) {
   }
   const navBg = {
     background: '#fff',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+    width: '100%'
   }
   const navStyle = {
     position: 'relative',

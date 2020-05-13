@@ -16,7 +16,6 @@ const WebDesign = React.lazy(() => import('./pages/web-design'));
 // COMPONENTES
 const Layout = React.lazy(() => import('antd/lib/layout'));
 const Nav = React.lazy(() => import('./components/Nav'));
-/* const Header = React.lazy(() => import('./components/Header')); */
 const Footer = React.lazy(() => import('./components/Footer'));
 const Planes = React.lazy(() => import("./components/Planes"));
 
