@@ -83,8 +83,7 @@ export default function Nav (props) {
                 <Link to="/"><img src={logo} alt="logo" style={logoSyle}/></Link>
               </Space>
             }
-            </Col> 
-              
+            </Col>
             <Col span={6}>
               <Row justify="end">
                 <Space>

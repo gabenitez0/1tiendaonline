@@ -2,11 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
-import SelectPlan from './components/SelectPlan';
-import SelectGraphicServices from './components/SelectGraphicServices';
-import SelectMarketingServices from './components/SelectMarketingServices';
+import SelectPlan from './paso1/SelectPlan';
+import SelectGraphicServices from './paso1/SelectGraphicServices';
+import SelectMarketingServices from './paso1/SelectMarketingServices';
 
-import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography } from 'antd';
+import ResumenCompra from './paso2/ResumenCompra';
+
+import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography, Space } from 'antd';
 const { Text } = Typography;
 const { Step } = Steps;
 
@@ -98,8 +100,9 @@ export default function OrderPlan (props) {
             <Text>Subtotal: ${orden.costoTotal}</Text>
           </Col>
           <Col>
+            <Space>
             {current > 0 &&
-              <Button type="secondary" style={{marginRight: '1rem'}} onClick={prev} >Atras</Button>
+              <Button type="secondary" onClick={prev} >Atras</Button>
             }
             {current < steps.length - 1 &&
               <Button type="primary" onClick={next}>Continuar</Button>
@@ -107,6 +110,7 @@ export default function OrderPlan (props) {
             {current === steps.length -1 &&
               <Button type="primary">Terminar</Button>
             }
+            </Space>
           </Col>
         </Row>}
     >
@@ -142,6 +146,8 @@ export default function OrderPlan (props) {
       )}
 
       {current === 1 && (
+
+        <ResumenCompra />,
 
         seRequireAyuda && (
           <>
