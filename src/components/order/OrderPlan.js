@@ -7,6 +7,7 @@ import SelectGraphicServices from './paso1/SelectGraphicServices';
 import SelectMarketingServices from './paso1/SelectMarketingServices';
 
 import ResumenCompra from './paso2/ResumenCompra';
+import MediosPago from './paso2/MediosPago';
 
 import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography, Space } from 'antd';
 const { Text } = Typography;
@@ -51,7 +52,7 @@ export default function OrderPlan (props) {
     },
     {
       title: 'Paso 2',
-      content: 'Realizar pago',
+      content: 'Resumen y pago',
     },
     {
       title: 'Listo',
@@ -146,10 +147,7 @@ export default function OrderPlan (props) {
       )}
 
       {current === 1 && (
-
-        <ResumenCompra />,
-
-        seRequireAyuda && (
+        seRequireAyuda ? 
           <>
             <h1>Algo necesita de atencións</h1>
             {orden.planTienda.necesitaAyuda && (
@@ -161,7 +159,13 @@ export default function OrderPlan (props) {
               ))}
             </ul>
           </>
-        )
+        :
+        <>
+        <Divider style={plain}>Resumen del pedido</Divider>
+        <ResumenCompra />
+        <Divider style={plain}>Medios de pago</Divider>
+        <MediosPago />
+        </>
       )}
 
       {current === steps.length - 1 && (
