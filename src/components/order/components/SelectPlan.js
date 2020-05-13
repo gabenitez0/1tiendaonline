@@ -17,13 +17,27 @@ export default function SelectPlan(props) {
 
     const handleOnChange = (value, {children}) => {
         setPrice(value);
-        context.dispatch({
-            type: 'establecerPlan',
-            payload: {
-                plan: children,
-                total: value 
-            }
-        });
+       
+        if(value === 'No sé') {
+            context.dispatch({
+                type: 'establecerPlan',
+                payload: {
+                    plan: children,
+                    total: 0,
+                    necesitaAyuda: true
+                }
+            });
+        } else {
+            context.dispatch({
+                type: 'establecerPlan',
+                payload: {
+                    plan: children,
+                    total: value,
+                    necesitaAyuda: false
+                }
+            });    
+        }
+
 
         context.dispatch({
             type: 'estimarTotal'
@@ -52,7 +66,7 @@ export default function SelectPlan(props) {
                                 {e.name}
                             </Option>
                         )}
-                            <Option value="0" key="0">
+                            <Option value="No sé" key="0">
                                 No sé
                             </Option>
                         </Select>

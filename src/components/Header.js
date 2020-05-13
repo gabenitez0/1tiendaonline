@@ -16,7 +16,7 @@ export default function Header(props) {
             setData(dataJson);
         }
         data();
-    }, [])
+    }, [props.page])
 
     const headerBg = {
         background: 'linear-gradient(-15deg, rgb(243, 249, 255), white 50%)'
@@ -60,7 +60,7 @@ export default function Header(props) {
                             <Text strong>
                                 {data.desc}
                             </Text>
-                            <Link to={data.buttonUrl}>
+                            <Link to="/planes">
                                 <Button type="primary" size="large" style={{marginTop: '8px'}}>
                                     {data.button}
                                 </Button>

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { contextoGlobal } from '../../../estado/contextoGlobal';
 
-import { Row, Col, Typography, Space, Checkbox, Select } from 'antd';
+import { Row, Col, Typography, Space, Checkbox, Select, Spin } from 'antd';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -12,13 +12,19 @@ function SelectMarketingServices ({title, data }) {
   const { orden, dispatch } = useContext(contextoGlobal);
 
   const handleCheckboxChange = ({ target }) => {
+
     if(target.checked) {
+
+      const { name } = data.find(service => service.id === target.id)
 
       dispatch({
         type: 'agregarServiciosPublicidad',
         payload: {
           id: target.id,
-          necesitaAyuda: false
+          name: name,
+          necesitaAyuda: false,
+          time: "10 días",
+          total: 1500
         }
       });
 
@@ -31,25 +37,46 @@ function SelectMarketingServices ({title, data }) {
         }
       });
 
-      dispatch({ type: 'estimarTotal' });
-
     }
+
+    dispatch({ type: 'estimarTotal' });
   }
 
   const handleSelectChange = (value, { id, children }) => {
-    dispatch({
-      type: 'modificarServicioPublicidad',
-      payload: {
-        id: id,
-        time: children,
-        price: value
-      }
-    })
+    
+    if(children === 'No sé') {
+
+      dispatch({
+        type: 'modificarServicioPublicidad',
+        payload: {
+          id: id,
+          time: children,
+          price: value,
+          necesitaAyuda: true
+        }
+      });
+
+    } else {
+
+      dispatch({
+        type: 'modificarServicioPublicidad',
+        payload: {
+          id: id,
+          time: children,
+          price: value,
+          necesitaAyuda: false
+        }
+      });
+
+    }
 
     dispatch({ type: 'estimarTotal' });
   }
 
   return (
+    data.length === 0 
+    ? <Spin size="large" />
+    :
     <Row gutter={[32, 8]}>
       <Col sm={7} span={24}>
         <Text strong>Servicios de {title}</Text>
@@ -107,17 +134,21 @@ function SelectMarketingServices ({title, data }) {
             </Space>
           </Col>
           <Col span={5} style={{textAlign: "right"}}>
-            <Space direction="vertical">
-              {data.map((servicio, index) => {
-                if(orden.serviciosPublicidad.length <= 0) {
-                  return <Text>$0</Text>
-                } else {
-                  return <Text>${orden.serviciosPublicidad[index].total || 0}</Text>;
-                }
-              })}
-            </Space>
-          </Col>
-        </Row>
+              <Space direction="vertical">
+                {data.map(service => (
+                  <Text key={service.id}>
+                    ${
+                        orden.serviciosPublicidad.find(item => item.id === service.id)
+                        ?
+                        orden.serviciosPublicidad.find(item => item.id === service.id).total
+                        :
+                        "0"
+                    }
+                  </Text>
+                ))}
+              </Space>
+            </Col>
+          </Row>
       </Col>
     </Row>
     

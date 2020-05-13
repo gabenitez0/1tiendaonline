@@ -1,7 +1,7 @@
 const estadoDeLocalStorage = JSON.parse(localStorage.getItem('state'));
 
 export let estadoInicial;
-if(estadoDeLocalStorage === null || undefined) {
+if (estadoDeLocalStorage === null || undefined) {
   estadoInicial = {
     planTienda: {},
     serviciosDiseno: [],
@@ -15,109 +15,86 @@ if(estadoDeLocalStorage === null || undefined) {
 // Este reducer recibira la información de la orden y podra ser manipulada de ser necesario
 // para poder regresar información nueva.
 export const ordenReducer = (state, action) => {
-  switch(action.type) {
-    
-    case 'establecerPlan':
-        // localStorage.setItem('state', JSON.stringify({ ...state, planTienda: {...action.payload} }));
-      return { ...state, planTienda: {...action.payload} };
+  switch (action.type) {
 
-    case 'solicitarAyuda':
-        const servicioAModificar = state.serviciosDiseno.find(servicio => servicio.id === action.payload.id);
-        const serviciosFiltrados = state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id);
-        const servicioDisenoModificado = {
-          ...state,
-          serviciosDiseno: [
-            ...serviciosFiltrados,
-            {
-              ...servicioAModificar,
-              necesitaAyuda: true,
-              cantidad: 0,
-              total: 0
-            }
-          ]
-        }
-        
-      return servicioDisenoModificado;
+    case 'establecerPlan':
+      return { ...state, planTienda: { ...action.payload } };
 
     case 'agregarServiciosDiseno':
-        localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: [...state.serviciosDiseno, action.payload]}));
+      localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: [...state.serviciosDiseno, action.payload]}));
       return {...state, serviciosDiseno: [...state.serviciosDiseno, action.payload]};
 
-    case 'agregarCantidadPrecio':
-      
-      const servicioModificado = state.serviciosDiseno.find(servicio => servicio.id === action.payload.id);
-      const serviciosLimpios = state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id);
-
-      localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: [...serviciosLimpios, {
-        ...servicioModificado,
-        cantidad: action.payload.cantidad,
+    case 'modificarServiciosDiseno':
+      const servicioDisenoActualizado ={
+        ...state.serviciosDiseno.find(service => service.id === action.payload.id),
+        qty: action.payload.qty,
         total: action.payload.total,
-        necesitaAyuda: false
-      }]}));
+        necesitaAyuda: action.payload.necesitaAyuda
+      };
 
-    return {...state, serviciosDiseno: [...serviciosLimpios, {
-      ...servicioModificado,
-      cantidad: action.payload.cantidad,
-      total: action.payload.total,
-      necesitaAyuda: false,
-    }]};
+      const serviciosDisenoActualizados = [
+        ...state.serviciosDiseno.filter(service => service.id !== action.payload.id),
+        servicioDisenoActualizado
+      ];
+
+      return {...state, serviciosDiseno: serviciosDisenoActualizados };
 
     case 'eliminarServiciosDiseno':
-      const lastState = {
+      localStorage.setItem('state', JSON.stringify({...state, serviciosDiseno: state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id)}));
+      return {...state, serviciosDiseno: state.serviciosDiseno.filter(servicio => servicio.id !== action.payload.id)}
+
+    case 'agregarServiciosPublicidad':
+      localStorage.setItem('state', JSON.stringify({
+        ...state, serviciosPublicidad: [
+          ...state.serviciosPublicidad,
+          action.payload
+        ]
+      }));
+      return {
+        ...state, serviciosPublicidad: [
+          ...state.serviciosPublicidad,
+          action.payload
+        ]
+      };
+
+    case 'eliminarServiciosPublicidad':
+      localStorage.setItem('state', JSON.stringify({ ...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id) }));
+      return { ...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id) };
+
+    case 'modificarServicioPublicidad':
+      const servicioPublicidadActualizado = {
+        ...state.serviciosPublicidad.find(servicio => servicio.id === action.payload.id),
+        time: action.payload.time,
+        total: action.payload.price,
+        necesitaAyuda: action.payload.necesitaAyuda
+      };
+
+      const serviciosPublicidadActualizados = state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id);
+      return {
         ...state,
-        serviciosDiseno: state.serviciosDiseno.filter(servicio => {
-          return servicio.id !== action.payload.id
-        })};
-        localStorage.setItem('state', JSON.stringify(lastState));
-      return lastState;
+        serviciosPublicidad: [...serviciosPublicidadActualizados, servicioPublicidadActualizado]
+      };
 
-      case 'agregarServiciosPublicidad':
-        localStorage.setItem('state', JSON.stringify({...state, serviciosPublicidad: [
-          ...state.serviciosPublicidad,
-          action.payload
-        ]}));
-        return {...state, serviciosPublicidad: [
-          ...state.serviciosPublicidad,
-          action.payload
-        ]};
-
-      case 'eliminarServiciosPublicidad':
-        localStorage.setItem('state', JSON.stringify({...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id)}));
-        return {...state, serviciosPublicidad: state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id)};
-
-      case 'modificarServicioPublicidad':
-        const servicioPublicidadActualizado = {
-          ...state.serviciosPublicidad.find(servicio => servicio.id === action.payload.id),
-          time: action.payload.time,
-          total: action.payload.price
-        };
-        
-        const serviciosPublicidadActualizados = state.serviciosPublicidad.filter(servicio => servicio.id !== action.payload.id);
-        return {
-          ...state,
-          serviciosPublicidad: [...serviciosPublicidadActualizados, servicioPublicidadActualizado]
-        };
-    
-      case 'estimarTotal':
+    case 'estimarTotal':
       const totalPlan = state.planTienda.total !== undefined ? Number(state.planTienda.total) : 0;
 
-      const totalServiciosDiseno = state.serviciosDiseno.length !== 0 
+      const totalServiciosDiseno = state.serviciosDiseno.length !== 0
         ? state.serviciosDiseno
           .map(servicio => servicio.total ? servicio.total : 0)
-          .reduce((a,c) => a + c)
+          .reduce((a, c) => a + c)
         : 0;
-        
-        
-      const totalServiciosPublicidad = state.serviciosPublicidad.length !== 0 
-      ? state.serviciosPublicidad
-        .map(servicio => servicio.total ? servicio.total : 0)
-        .reduce((a,c) => a + c)
-      : 0;
 
-      const total = Number(totalPlan) + Number(totalServiciosDiseno) + Number(totalServiciosPublicidad);  
-      
-      localStorage.setItem('state', JSON.stringify({...state, costoTotal: total}));
-    return {...state, costoTotal: total};
+
+      const totalServiciosPublicidad = state.serviciosPublicidad.length !== 0
+        ? state.serviciosPublicidad
+          .map(servicio => servicio.total ? servicio.total : 0)
+          .reduce((a, c) => a + c)
+        : 0;
+
+      const total = Number(totalPlan) + Number(totalServiciosDiseno) + Number(totalServiciosPublicidad);
+
+      localStorage.setItem('state', JSON.stringify({ ...state, costoTotal: total }));
+      return { ...state, costoTotal: total };
 
     default:
       return state;

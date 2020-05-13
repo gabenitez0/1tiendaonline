@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
 import SelectPlan from './components/SelectPlan';
-import SelectPlanDesign from './components/SelectGraphicDesign';
+import SelectGraphicServices from './components/SelectGraphicServices';
 import SelectMarketingServices from './components/SelectMarketingServices';
 
 import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography } from 'antd';
@@ -11,7 +11,12 @@ const { Text } = Typography;
 const { Step } = Steps;
 
 export default function OrderPlan (props) {
+
+  const { orden } = useContext(contextoGlobal);
+
   const {visible, setVisible} = props.visibleState;
+
+  const [current, setCurrent] = useState(0);
 
   const [dataPlanes, setdataPlanes] = useState([]);
 
@@ -36,8 +41,6 @@ export default function OrderPlan (props) {
       }
       dataPlanes();
   }, []);
-
-  const context = useContext(contextoGlobal);
   
   const steps = [
     {
@@ -54,77 +57,134 @@ export default function OrderPlan (props) {
     },
   ];
 
-  // eslint-disable-next-line
-  const [step, setStep] = useState(0);
-
-  // function next() {
-  //     const current = step + 1;
-  //     setStep(current);
-  // }
-  // function prev() {
-  //     const current = step - 1;
-  //     setStep(current);
-  // }
-
   const responsive = window.innerWidth < "500"
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
 
   const handleOnDrawerClose = () => {
-    console.log('el drawer se cerro');
     setVisible(false);
   }
 
-  const handleafterVisibleChange = () => {
-    if(visible) {
+  const next = () => {
+    setCurrent(current + 1);
+  }
 
+  const prev = () => {
+    setCurrent(current - 1);
+  }
+
+  const seRequireAyuda = orden.serviciosDiseno.map(servicio => servicio.necesitaAyuda).includes(true) || orden.serviciosPublicidad.map(servicio => servicio.necesitaAyuda).includes(true) || orden.planTienda.necesitaAyuda;
+
+  const serviciosQueRequierenAtencion = () => {
+    if(seRequireAyuda) {
+      const serviciosDiseno = orden.serviciosDiseno.filter(servicio => servicio.necesitaAyuda === true);
+      const serviciosPublicidad = orden.serviciosPublicidad.filter(servicio => servicio.necesitaAyuda === true);
+      return [...serviciosDiseno, ...serviciosPublicidad];
+    } else {
+      return false;
     }
   }
 
   return (
     <Drawer
-      title={"Armá tu plan: " + steps[step].content}
+      title={"Armá tu plan: " + steps[current].content}
       placement="right"
       closable={window.innerWidth < "600" ? true : false}
       onClose={handleOnDrawerClose}
-      afterVisibleChange={handleafterVisibleChange}
       visible={visible}
       width={responsive ? "100%" : "500px"}
       footer={
         <Row justify="space-between" align="middle">
           <Col>
-      <Text>Subtotal: ${context.orden.costoTotal}</Text>
+            <Text>Subtotal: ${orden.costoTotal}</Text>
           </Col>
           <Col>
-            <Button type="primary" onClick={() => console.log(context.orden)} >Continuar</Button>
+            {current > 0 &&
+              <Button type="secondary" style={{marginRight: '1rem'}} onClick={prev} >Atras</Button>
+            }
+            {current < steps.length - 1 &&
+              <Button type="primary" onClick={next}>Continuar</Button>
+            }
+            {current === steps.length -1 &&
+              <Button type="primary">Terminar</Button>
+            }
           </Col>
         </Row>}
     >
-      <Steps current={step} size="small">
+      <Steps current={current} size="small">
         {steps.map(item => (
             <Step key={item.title} title={item.title} description={item.content}/>
         ))}
       </Steps>
+      
+      {current === 0 && (
+        <>
+          <Divider style={plain}>Tienda Online</Divider>
 
-      <Divider style={plain}>Tienda Online</Divider>
+          <Form>
+            <Form.Item>
+              <SelectPlan data={dataPlanes} responsive={responsive} />
+            </Form.Item>
 
-      <Form>
-        <Form.Item>
-          <SelectPlan data={dataPlanes} responsive={responsive} />
-        </Form.Item>
+            <Divider style={plain}>Diseño Gráfico</Divider>
 
-        <Divider style={plain}>Diseño Gráfico</Divider>
+            <Form.Item>
+              <SelectGraphicServices title="diseño" responsive={responsive} data={dataDesign} />
+            </Form.Item>
 
-        <Form.Item>
-          <SelectPlanDesign title="diseño" responsive={responsive} values={dataDesign} />
-        </Form.Item>
+            <Divider style={plain}>Publicidad y Marketing</Divider>
 
-        <Divider style={plain}>Publicidad y Marketing</Divider>
+            <Form.Item>
+              <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
+            </Form.Item>
 
-        <Form.Item>
-          <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
-        </Form.Item>
+          </Form>
+        </>
+      )}
 
-      </Form>
+      {current === 1 && (
+
+        seRequireAyuda && (
+          <>
+            <h1>Algo necesita de atencións</h1>
+            {orden.planTienda.necesitaAyuda && (
+              <h3>Se necesita ayuda para elegir un plan</h3>
+            )}
+            <ul>
+              {serviciosQueRequierenAtencion().map(servicio => (
+                <li key={servicio.id}>{servicio.name}</li>
+              ))}
+            </ul>
+          </>
+        )
+      )}
+
+      {current === steps.length - 1 && (
+        <>
+          <h1>{orden.planTienda.plan}</h1>
+          <span>{orden.planTienda.total}</span>
+          <Divider></Divider>
+          <h2>Servicios de diseño</h2>
+          {orden.serviciosDiseno.map(servicio => (
+            <>
+              <h3>{servicio.name}</h3>
+              <p>cantidad: {servicio.qty}</p>
+              <p>total: {servicio.total}</p>
+            </>
+          ))}
+          <Divider></Divider>
+          <h2>Servicios publcidad y marketing</h2>
+          {orden.serviciosPublicidad.map(servicio => (
+            <>
+              <h3>{servicio.name}</h3>
+              <p>tiempo: {servicio.time}</p>
+              <p>total: {servicio.total}</p>
+            </>
+          ))}
+          <Divider></Divider>
+          <h4>total: {orden.costoTotal}</h4>
+        </>
+      )}
+
     </Drawer>
   );
 }

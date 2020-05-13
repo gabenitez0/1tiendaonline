@@ -12,8 +12,6 @@ const { Text } = Typography;
 
 const MobileMenu = React.lazy(() => import('./MobileMenu'));
 
-
-
 export default function Nav (props) {
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -59,7 +57,6 @@ export default function Nav (props) {
     top: '5px',
   }
 
-  
   return (
     <section id="nav" style={navBg}>
         <Header className="container noBg">
@@ -70,7 +67,7 @@ export default function Nav (props) {
                 <Link to="/"><img src={logo} alt="logo" style={logoSyle}/></Link>
                 <Space align="center" size="0">
                 {navItems.map(e =>
-                <div style={navStyle}>
+                <div key={e.id} style={navStyle}>
                   <Divider type="vertical"/>
                   <Link 
                     to={e.url}
@@ -93,7 +90,7 @@ export default function Nav (props) {
                 <Space>
                 {tabletRes && <Button type="link" style={navStyle}><Text strong>Contacto</Text></Button>}
                   <Button type="primary" style={navStyle} onClick={() => props.setVisible(true)}>
-                    {orden.costoTotal > 0 ? 'Continuar' : 'Empezar'}
+                    {orden.costoTotal <= 0 ? 'Empezar' : 'Continuar'}
                   </Button>
                 </Space>
               </Row>

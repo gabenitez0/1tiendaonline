@@ -41,7 +41,7 @@ export default function CallToAction() {
                     <Text>
                         {dataCta.desc}
                     </Text>
-                    <Link to={dataCta.link}>
+                    <Link to={dataCta.link || '/'}>
                         <Button type="primary" size="large" style={{marginTop: '8px'}} onClick={dataCta.onClick}>
                             {dataCta.button}
                         </Button>
