@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+
+import { contextoGlobal } from '../estado/contextoGlobal';
 
 //DEPENDENCIAS
 import Fade from 'react-reveal/Fade';
@@ -8,6 +10,10 @@ const {Content} = Layout;
 const {Text, Title} = Typography;
 
 export default function Planes(props) {
+
+    // eslint-disable-next-line no-unused-vars
+    const { orden, dispatch } = useContext(contextoGlobal);
+
     const [dataPlanes, setdataPlanes] = useState([]);
     useEffect(() => {
         async function dataPlanes() {
@@ -47,7 +53,14 @@ export default function Planes(props) {
                     <Button 
                         type="primary" 
                         style={{marginTop: '8px'}} 
-                        onClick={() => null}
+                        onClick={() => {
+                            dispatch({
+                                type: 'toggleDrawer',
+                                payload: {
+                                    visible: true
+                                }
+                            })
+                        }}
                     >
                         Empezar
                     </Button>

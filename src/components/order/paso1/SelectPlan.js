@@ -6,40 +6,41 @@ import { Typography, Select, Row, Col } from 'antd';
 const { Text } = Typography;
 const { Option } = Select
 
-export default function SelectPlan(props) {
+export default function SelectPlan({ data }) {
 
-    const context = useContext(contextoGlobal)
+    const { orden, dispatch } = useContext(contextoGlobal)
 
     const [price, setPrice] = useState(0);
-    /* useEffect(() => {
-        console.log(price)
-    }) */
 
-    const handleOnChange = (value, {children}) => {
+    const handleOnChange = (value, { id, children }) => {
         setPrice(value);
-       
+        
         if(value === 'No sé') {
-            context.dispatch({
+            dispatch({
                 type: 'establecerPlan',
                 payload: {
-                    plan: children,
+                    name: children,
                     total: 0,
                     necesitaAyuda: true
                 }
             });
         } else {
-            context.dispatch({
+            const { name, offer, price, desc } = data.find(service => service.id === id);
+            dispatch({
                 type: 'establecerPlan',
                 payload: {
-                    plan: children,
-                    total: value,
+                    id: id,
+                    name: name,
+                    total: price,
+                    descripcion: desc,
+                    offer: offer,
                     necesitaAyuda: false
                 }
             });    
         }
 
 
-        context.dispatch({
+        dispatch({
             type: 'estimarTotal'
         });
     }
@@ -53,13 +54,13 @@ export default function SelectPlan(props) {
                 <Row align="middle" justify="space-between">
                     <Col span={12}>
                         <Select 
-                            defaultValue={context.orden.planTienda.plan !== undefined ? context.orden.planTienda.plan : "Seleccionar"}
+                            defaultValue={orden.planTienda.name !== undefined ? orden.planTienda.name : "Seleccionar"}
                             style={{width: 200}}
-                            onChange={(value, option) => handleOnChange(value, option) }
-                            
+                            onChange={handleOnChange}
                         >    
-                        {props.data.map(e =>
-                            <Option 
+                        {data.map(e =>
+                            <Option
+                                id={e.id} 
                                 key={e.id}
                                 value={e.price}
                             >
@@ -73,7 +74,7 @@ export default function SelectPlan(props) {
                     </Col>
                     <Col span={6} style={{textAlign: "right"}}>
                         <Text>
-                            ${ context.orden.planTienda.total !== undefined ? context.orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
+                            ${ orden.planTienda.total !== undefined ? orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
                         </Text>
                     </Col>
                 </Row>

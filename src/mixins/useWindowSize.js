@@ -1,4 +1,5 @@
-import {useEffect, useState} from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
 
 export default function useWindowSize() {
     const isClient = typeof window === 'object';

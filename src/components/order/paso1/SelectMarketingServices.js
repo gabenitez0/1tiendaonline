@@ -15,7 +15,7 @@ function SelectMarketingServices ({title, data }) {
 
     if(target.checked) {
 
-      const { name } = data.find(service => service.id === target.id)
+      const { name, options } = data.find(service => service.id === target.id);
 
       dispatch({
         type: 'agregarServiciosPublicidad',
@@ -23,8 +23,8 @@ function SelectMarketingServices ({title, data }) {
           id: target.id,
           name: name,
           necesitaAyuda: false,
-          time: "10 días",
-          total: 1500
+          time: options[0].time,
+          total: options[0].price
         }
       });
 
@@ -109,11 +109,9 @@ function SelectMarketingServices ({title, data }) {
                   size="small"
                   onChange={handleSelectChange}
                   value={
-                    orden.serviciosPublicidad.length > 0 && orden.serviciosPublicidad.find(item => item.id === service.id).time
-                    ?
-                    orden.serviciosPublicidad.find(item => item.id === service.id).time
-                    :
-                    "0 días"
+                    orden.serviciosPublicidad.length !== 0 && orden.serviciosPublicidad.map(item => item.id).includes(service.id)
+                    ? orden.serviciosPublicidad.find(item => item.id === service.id).time
+                    : "Elegir"
                   }
                   disabled={
                     !orden.serviciosPublicidad.map(service => service.id).includes(service.id)
@@ -124,7 +122,6 @@ function SelectMarketingServices ({title, data }) {
                       id={service.id} 
                       key={index}
                       value={option.price}
-                      
                     >
                       {option.time}
                     </Option>

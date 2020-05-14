@@ -6,7 +6,20 @@ if (estadoDeLocalStorage === null || undefined) {
     planTienda: {},
     serviciosDiseno: [],
     serviciosPublicidad: [],
-    costoTotal: 0,
+    servicioDominio: [],
+    metodoDePago: '',
+    serviciosIncluidos: [
+      {
+        id: "s3rvIc10oBl1g4tor1o",
+        name: "Instalación, configuración inicial y soporte técnico por chat",
+        total: 2000
+      }
+    ],
+    stateCurrent: 0,
+    subTotal: 0,
+    totalFinal: 0,
+    estaEnProcesoDePago: false,
+    drawerVisible: false,
   }
 } else {
   estadoInicial = estadoDeLocalStorage;
@@ -16,6 +29,31 @@ if (estadoDeLocalStorage === null || undefined) {
 // para poder regresar información nueva.
 export const ordenReducer = (state, action) => {
   switch (action.type) {
+
+    case 'resetearElEstado':
+      return {
+        planTienda: {},
+        serviciosDiseno: [],
+        serviciosPublicidad: [],
+        servicioDominio: [],
+        metodoDePago: '',
+        serviciosIncluidos: [
+          {
+            id: "s3rvIc10oBl1g4tor1o",
+            name: "Instalación, configuración inicial y soporte técnico por chat",
+            total: 2000
+          }
+        ],
+        stateCurrent: 0,
+        subTotal: 0,
+        totalFinal: 0,
+        estaEnProcesoDePago: false,
+        drawerVisible: false,
+      }
+
+    case 'toggleDrawer':
+      localStorage.setItem('state', JSON.stringify({...state, drawerVisible: action.payload.visible}))
+      return {...state, drawerVisible: action.payload.visible};
 
     case 'establecerPlan':
       return { ...state, planTienda: { ...action.payload } };
@@ -75,6 +113,50 @@ export const ordenReducer = (state, action) => {
         serviciosPublicidad: [...serviciosPublicidadActualizados, servicioPublicidadActualizado]
       };
 
+    case 'agregarServicioDominio': 
+      const servicioDominioNuevo = {
+        ...state,
+        servicioDominio: [
+          action.payload
+        ]
+      } 
+    return servicioDominioNuevo;
+
+    case 'eliminarServicioDominio':
+      const servicioDominioLimio = {
+        ...state,
+        servicioDominio: state.servicioDominio.filter(servicio => servicio.id !== action.payload.id)
+      };
+      return  servicioDominioLimio;
+
+      case 'modificarServicioDominio':
+        const servicioDominioActualizado = {
+          ...state.servicioDominio.find(servicio => servicio.id === action.payload.id),
+          time: action.payload.time,
+          total: action.payload.price,
+          necesitaAyuda: action.payload.necesitaAyuda
+        };
+  
+        const servicioDominioActualizados = state.servicioDominio.filter(servicio => servicio.id !== action.payload.id);
+        return {
+          ...state,
+          servicioDominio: [...servicioDominioActualizados, servicioDominioActualizado]
+        };
+
+    case 'establecerMetodoDePago':
+      localStorage.setItem('state', JSON.stringify({
+        ...state,
+        metodoDePago: action.payload.metodoDePago
+      }));
+      return {
+        ...state,
+        metodoDePago: action.payload.metodoDePago
+      }
+
+    case 'establecerDrawerStep':
+      localStorage.setItem('state', JSON.stringify({...state, stateCurrent: action.payload.step }));
+      return {...state, stateCurrent: action.payload.step };
+
     case 'estimarTotal':
       const totalPlan = state.planTienda.total !== undefined ? Number(state.planTienda.total) : 0;
 
@@ -91,12 +173,35 @@ export const ordenReducer = (state, action) => {
           .reduce((a, c) => a + c)
         : 0;
 
-      const total = Number(totalPlan) + Number(totalServiciosDiseno) + Number(totalServiciosPublicidad);
+      const totalServicioDominio = state.servicioDominio.length !== 0
+        ? state.servicioDominio
+          .map(servicio => servicio.total ? servicio.total : 0)
+          .reduce((a, c) => a + c)
+        : 0;
 
-      localStorage.setItem('state', JSON.stringify({ ...state, costoTotal: total }));
-      return { ...state, costoTotal: total };
+      const subtotal = Number(totalPlan) + Number(totalServiciosDiseno) + Number(totalServiciosPublicidad) + Number(totalServicioDominio);
 
-    default:
+      localStorage.setItem('state', JSON.stringify({ ...state, subTotal: subtotal }));
+      return { ...state, subTotal: subtotal };
+
+
+      case 'totalFinal':
+        const subTotal = state.subTotal;
+
+        const totalServiciosIncluidos = state.serviciosIncluidos.length !== 0
+        ? state.serviciosIncluidos
+          .map(servicio => servicio.total ? servicio.total : 0)
+          .reduce((a, c) => a + c)
+        : 0;
+        
+        localStorage.setItem('state', JSON.stringify({...state, totalFinal: Number(subTotal) + Number(totalServiciosIncluidos) - state.planTienda.total}))
+        return {...state, totalFinal: Number(subTotal) + Number(totalServiciosIncluidos) - state.planTienda.total}
+
+      case 'estaEnProcesoDePago':
+        localStorage.setItem('state', JSON.stringify({...state, estaEnProcesoDePago: action.payload.enProceso }));
+        return {...state, estaEnProcesoDePago: action.payload.enProceso }
+    
+        default:
       return state;
   };
 }

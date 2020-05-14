@@ -16,7 +16,7 @@ export default function Nav (props) {
 
   const [menuVisible, setMenuVisible] = useState(false);
   
-  const { orden } = useContext(contextoGlobal);
+  const { orden, dispatch } = useContext(contextoGlobal);
 
   const [navItems, setItems] = useState([]);
   useEffect(() => {
@@ -93,7 +93,18 @@ export default function Nav (props) {
               <Row justify="end">
                 <Space>
                 {tabletRes && <Button type="link" style={navStyle}><Text strong>Contacto</Text></Button>}
-                  <Button type="primary" style={navStyle} onClick={() => props.setVisible(true)}>
+                  <Button
+                    type="primary"
+                    style={navStyle} 
+                    onClick={() => {
+                      dispatch({
+                        type: 'toggleDrawer',
+                        payload: {
+                          visible: true
+                        }
+                      });
+                    }}
+                  >
                     {orden.costoTotal <= 0 ? 'Empezar' : 'Continuar'}
                   </Button>
                 </Space>

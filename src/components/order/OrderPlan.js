@@ -7,27 +7,33 @@ import useWindowSize from '../../mixins/useWindowSize'
 import SelectPlan from './paso1/SelectPlan';
 import SelectGraphicServices from './paso1/SelectGraphicServices';
 import SelectMarketingServices from './paso1/SelectMarketingServices';
+import SelectDomainServices from './paso1/SelectDomainServices';
 
 import ResumenCompra from './paso2/ResumenCompra';
 import MediosPago from './paso2/MediosPago';
 
-import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography, Space } from 'antd';
+import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography, Space, message } from 'antd';
 const { Text } = Typography;
 const { Step } = Steps;
 
+message.config({
+  maxCount: 1,
+  getContainer: document.getElementById('message-container')
+});
+
 export default function OrderPlan (props) {
 
-  const { orden } = useContext(contextoGlobal);
-
-  const {visible, setVisible} = props.visibleState;
-
-  const [current, setCurrent] = useState(0);
+  const { orden, dispatch } = useContext(contextoGlobal);
 
   const [dataPlanes, setdataPlanes] = useState([]);
 
   const [dataDesign, setDataDesign] = useState([]);
 
   const [dataMarketing, setDataMarketing] = useState([]);
+
+  const [dataDomain, setDataDomain] = useState([]);
+
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   useEffect(() => {
       fetch('https://api.1tiendaonline.com/graphic-designs')
@@ -38,6 +44,10 @@ export default function OrderPlan (props) {
         .then(res => res.json())
         .then(data => setDataMarketing(data));
 
+      fetch('https://api.1tiendaonline.com/web-services')
+        .then(res => res.json())
+        .then(data => setDataDomain(data));
+
       async function dataPlanes() {
         const res = await fetch('https://api.1tiendaonline.com/planes/')
         const data = await res.json();
@@ -45,6 +55,7 @@ export default function OrderPlan (props) {
         setdataPlanes(data);
       }
       dataPlanes();
+
   }, []);
   
   const steps = [
@@ -67,137 +78,298 @@ export default function OrderPlan (props) {
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
 
   const handleOnDrawerClose = () => {
-    setVisible(false);
+
+    // Este dispatch se utilizara para indicar si el modal deberia de estar abierto o no.
+    dispatch({
+      type: 'toggleDrawer',
+      payload: {
+        visible: false
+      }
+    });
+
+    // Esto indicara que cuando el drawer este en el ultimo paso y el usuario cierre el drawer
+    // todo volvera a como estaba al inicio.
+    if(orden.stateCurrent === 2) {
+      localStorage.removeItem('state');
+
+      dispatch({type: 'resetearElEstado'})
+
+      dispatch({
+        type: 'resetearElEstado'
+      })
+    }
+
   }
 
-  const next = () => {
-    setCurrent(current + 1);
+  const changeStep = () => {
+    // Esto revisará si en el estado ya se encuentra un plan tienda seleccionado.
+    if(Object.entries(orden.planTienda).length === 0) {
+      return message.warning('Necesitas seleccionar un plan tienda.');
+    }
+
+    dispatch({
+      type: 'totalFinal'
+    });
+
+    dispatch({
+      type: 'establecerDrawerStep',
+      payload: {
+        step: orden.stateCurrent + 1
+      }
+    });
+
   }
 
   const prev = () => {
-    setCurrent(current - 1);
+    dispatch({
+      type: 'establecerDrawerStep',
+      payload: {
+        step: orden.stateCurrent - 1
+      }
+    });
   }
 
-  const seRequireAyuda = orden.serviciosDiseno.map(servicio => servicio.necesitaAyuda).includes(true) || orden.serviciosPublicidad.map(servicio => servicio.necesitaAyuda).includes(true) || orden.planTienda.necesitaAyuda;
+  const seRequireAyuda = orden.serviciosDiseno.map(servicio => servicio.necesitaAyuda).includes(true) || orden.serviciosPublicidad.map(servicio => servicio.necesitaAyuda).includes(true) || orden.servicioDominio.map(servicio => servicio.necesitaAyuda).includes(true) || orden.planTienda.necesitaAyuda;
 
   const serviciosQueRequierenAtencion = () => {
     if(seRequireAyuda) {
       const serviciosDiseno = orden.serviciosDiseno.filter(servicio => servicio.necesitaAyuda === true);
       const serviciosPublicidad = orden.serviciosPublicidad.filter(servicio => servicio.necesitaAyuda === true);
-      return [...serviciosDiseno, ...serviciosPublicidad];
+      const servicioDominio = orden.servicioDominio.filter(servicio => servicio.necesitaAyuda === true);
+      return [...serviciosDiseno, ...serviciosPublicidad, ...servicioDominio];
     } else {
       return false;
     }
   }
 
-  return (
-    <Drawer
-      title={"Armá tu plan: " + steps[current].content}
-      placement="right"
-      closable={size.width < "600" ? true : false}
-      onClose={handleOnDrawerClose}
-      visible={visible}
-      width={responsive ? "100%" : "500px"}
-      footer={
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Text>Subtotal: ${orden.costoTotal}</Text>
-          </Col>
-          <Col>
-            <Space>
-            {current > 0 &&
-              <Button type="secondary" onClick={prev} >Atras</Button>
-            }
-            {current < steps.length - 1 &&
-              <Button type="primary" onClick={next}>Continuar</Button>
-            }
-            {current === steps.length -1 &&
-              <Button type="primary">Terminar</Button>
-            }
-            </Space>
-          </Col>
-        </Row>}
-    >
-      <Steps current={current} size="small">
-        {steps.map(item => (
-            <Step key={item.title} title={item.title} description={item.content}/>
-        ))}
-      </Steps>
+  const goToPayment = () => {
+    
+    // Esta condicional es una simulación; en este caso solo funcionar con PayPal para efecto de demostración.
+    if(orden.metodoDePago === "Paypal") {
+
+      // Se deberia de habiliar el botón con un icono de loading para hacer notar al 
+      // usuario que se esta llevando a pago el pago con el medio seleccionado.
+      setButtonLoading(true);
       
-      {current === 0 && (
-        <>
-          <Divider style={plain}>Tienda Online</Divider>
+      // Por otra parte sera necesario establecer en el estado que se esta llevando al un proceso de pago.
+      // Esto evitara que los otros medios pagos se puedan seleccionar y se pueda producir un bug.
+      
+      // Siempre se debe indicar al estado global que se entro en un proceso de pago para que se puedan
+      // deshabilitar las otras opciones de metodo de pago.
+      dispatch({
+        type: 'estaEnProcesoDePago',
+        payload: {
+          enProceso: true
+        }
+      });
 
-          <Form>
-            <Form.Item>
-              <SelectPlan data={dataPlanes} responsive={responsive} />
-            </Form.Item>
+      // Este setTimeout simulara la ejecución del metodo correspondiente al metodo de pago
+      // donde la puede que el pago se lleve de manera exitosa o no.
+      setTimeout(() => {
+        setButtonLoading(false);
 
-            <Divider style={plain}>Diseño Gráfico</Divider>
+        // Este condicional simular la respuesta del medio de pago en caso de que la misma sea 
+        // exitosa.
+        if(Math.round(Math.random()) === 1) {
 
-            <Form.Item>
-              <SelectGraphicServices title="diseño" responsive={responsive} data={dataDesign} />
-            </Form.Item>
+          // Este dispatch le dira al estado que cambie al ultimo elemento que tiene el componte Steps 
+          // que pertence a Ant Design.
+          dispatch({
+            type: 'establecerDrawerStep',
+            payload: {
+              step: orden.stateCurrent + 1
+            }
+          });
 
-            <Divider style={plain}>Publicidad y Marketing</Divider>
+        } else {
+          // En caso de que sucede un error en el proceso de pago en este caso solo se mandara un 
+          // mensaje al usuario.
 
-            <Form.Item>
-              <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
-            </Form.Item>
+          message.error('Sucedio un error en el proceso de pago.');
+        }
 
-          </Form>
-        </>
-      )}
+        dispatch({
+          type: 'estaEnProcesoDePago',
+          payload: {
+            enProceso: false
+          }
+        });
 
-      {current === 1 && (
-        seRequireAyuda ? 
+      }, 5000)
+
+    } else {
+      message.error('Hay un error con el medio de pago seleccionado!')
+    }
+
+  }
+
+  return (
+      <Drawer
+        title={"Armá tu plan: " + steps[orden.stateCurrent].content}
+        placement="right"
+        closable={size.width < "600" ? true : false}
+        onClose={handleOnDrawerClose}
+        visible={orden.drawerVisible}
+        width={responsive ? "100%" : "500px"}
+        footer={
+          <Row justify="space-between" align="middle">
+            <Col>
+              {orden.stateCurrent === 0 && (
+                <Text>Subtotal: ${orden.subTotal}</Text>
+              )}
+            </Col>
+            <Col>
+              <Space>
+              {orden.stateCurrent === 1 &&
+                <Button type="secondary" onClick={prev} >Atras</Button>
+              }
+              {orden.stateCurrent === 0 &&
+                <Button
+                  type="primary"
+                  onClick={changeStep}
+                  disabled={
+                    Object.entries(orden.planTienda).length === 0 && (orden.serviciosDiseno.length === 0 && orden.serviciosPublicidad.length === 0 && orden.servicioDominio.length === 0)
+                  }
+                >
+                  Continuar
+                </Button>
+              }
+              {orden.stateCurrent === 1 &&
+                <Button 
+                  type="primary"
+                  onClick={goToPayment}
+                  loading={buttonLoading}
+                  disabled={
+                    orden.metodoDePago === ""
+                  }
+                >
+                  {orden.metodoDePago !== ""
+                    ? "Pagar con " + orden.metodoDePago
+                    : "Elegir medio de pago"
+                  }
+                </Button>
+              }
+              {orden.stateCurrent === steps.length -1 &&
+                <Button 
+                  type="primary"
+                  onClick={() => {
+                    dispatch({
+                      type: 'toggleDrawer',
+                      payload: {
+                        visible: false
+                      }
+                    })
+
+                    dispatch({
+                      type: 'resetearElEstado',
+                      payload: {
+                        visible: false
+                      }
+                    })
+                  }}
+                  >
+                    Terminar
+                  </Button>
+              }
+              </Space>
+            </Col>
+          </Row>}
+      >
+        <Steps current={orden.stateCurrent} size="small">
+          {steps.map(item => (
+              <Step key={item.title} title={item.title} description={item.content}/>
+          ))}
+        </Steps>
+        
+        {orden.stateCurrent === 0 && (
           <>
-            <h1>Algo necesita de atencións</h1>
-            {orden.planTienda.necesitaAyuda && (
-              <h3>Se necesita ayuda para elegir un plan</h3>
-            )}
-            <ul>
-              {serviciosQueRequierenAtencion().map(servicio => (
-                <li key={servicio.id}>{servicio.name}</li>
-              ))}
-            </ul>
+            <Divider style={plain}>Tienda Online</Divider>
+
+            <Form>
+              <Form.Item>
+                <SelectPlan data={dataPlanes} responsive={responsive} />
+              </Form.Item>
+
+              <Divider style={plain}>Diseño Gráfico</Divider>
+
+              <Form.Item>
+                <SelectGraphicServices title="diseño" responsive={responsive} data={dataDesign} />
+              </Form.Item>
+
+              <Divider style={plain}>Publicidad y Marketing</Divider>
+
+              <Form.Item>
+                <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
+              </Form.Item>
+
+              <Divider style={plain}>Dominios</Divider>
+
+              <Form.Item>
+                <SelectDomainServices title="dominio" responsive={responsive} data={dataDomain} />
+              </Form.Item>
+
+            </Form>
           </>
-        :
-        <>
-        <Divider style={plain}>Resumen del pedido</Divider>
-        <ResumenCompra />
-        <Divider style={plain}>Medios de pago</Divider>
-        <MediosPago />
-        </>
-      )}
+        )}
 
-      {current === steps.length - 1 && (
-        <>
-          <h1>{orden.planTienda.plan}</h1>
-          <span>{orden.planTienda.total}</span>
-          <Divider></Divider>
-          <h2>Servicios de diseño</h2>
-          {orden.serviciosDiseno.map(servicio => (
+        {orden.stateCurrent === 1 && (
+          seRequireAyuda ? 
             <>
-              <h3>{servicio.name}</h3>
-              <p>cantidad: {servicio.qty}</p>
-              <p>total: {servicio.total}</p>
+              <h1>Algo necesita de atencións</h1>
+              {orden.planTienda.necesitaAyuda && (
+                <h3>Se necesita ayuda para elegir un plan</h3>
+              )}
+              <ul>
+                {serviciosQueRequierenAtencion().map(servicio => (
+                  <li key={servicio.id}>{servicio.name}</li>
+                ))}
+              </ul>
             </>
-          ))}
-          <Divider></Divider>
-          <h2>Servicios publcidad y marketing</h2>
-          {orden.serviciosPublicidad.map(servicio => (
-            <>
-              <h3>{servicio.name}</h3>
-              <p>tiempo: {servicio.time}</p>
-              <p>total: {servicio.total}</p>
-            </>
-          ))}
-          <Divider></Divider>
-          <h4>total: {orden.costoTotal}</h4>
-        </>
-      )}
+          :
+          <>
+          <Divider style={plain}>Resumen del pedido</Divider>
+          <ResumenCompra />
+          <Divider style={plain}>Medios de pago</Divider>
+          <MediosPago />
+          </>
+        )}
 
-    </Drawer>
+        {orden.stateCurrent === steps.length - 1 && (
+          <>
+            <h1 style={{color: 'red'}}>Aqui se deberia de mostrar el resumen de la compra o cualquier cosa en caso de que todo se haya estado bien</h1>
+            <h2>{orden.planTienda.name}</h2>
+            <span>{orden.planTienda.total}</span>
+            <Divider></Divider>
+            <h2>Servicios de diseño</h2>
+            {orden.serviciosDiseno.map(servicio => (
+              <>
+                <h3>{servicio.name}</h3>
+                <p>cantidad: {servicio.qty}</p>
+                <p>total: {servicio.total}</p>
+              </>
+            ))}
+            <Divider></Divider>
+            <h2>Servicios publcidad y marketing</h2>
+            {orden.serviciosPublicidad.map(servicio => (
+              <>
+                <h3>{servicio.name}</h3>
+                <p>tiempo: {servicio.time}</p>
+                <p>total: {servicio.total}</p>
+              </>
+            ))}
+            <h2>Servicios incluidos</h2>
+            {orden.serviciosIncluidos.map(servicio => (
+              <>
+                <h3>{servicio.name}</h3>
+                <p>tiempo: {servicio.time}</p>
+                <p>total: {servicio.total}</p>
+              </>
+            ))}
+            <Divider></Divider>
+            <h4>total: {orden.totalFinal}</h4>
+          </>
+        )}
+
+      </Drawer>
   );
 }

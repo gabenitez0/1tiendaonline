@@ -123,7 +123,7 @@ function SelectGraphicServices({ title, data }) {
                                             ?
                                             orden.serviciosDiseno.find(item => item.id === service.id).qty
                                             :
-                                            0
+                                            "Elegir"
                                         }
                                         disabled={
                                             orden.serviciosDiseno.length > 0 && orden.serviciosDiseno.map(servicio => servicio.id).includes(service.id)
