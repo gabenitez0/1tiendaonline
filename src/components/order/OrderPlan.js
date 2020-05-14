@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
+import useWindowSize from '../../mixins/useWindowSize'
+
 import SelectPlan from './paso1/SelectPlan';
 import SelectGraphicServices from './paso1/SelectGraphicServices';
 import SelectMarketingServices from './paso1/SelectMarketingServices';
@@ -60,7 +62,8 @@ export default function OrderPlan (props) {
     },
   ];
 
-  const responsive = window.innerWidth < "500"
+  const size = useWindowSize();
+  const responsive = size.width < "500"
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
 
   const handleOnDrawerClose = () => {
@@ -91,7 +94,7 @@ export default function OrderPlan (props) {
     <Drawer
       title={"Armá tu plan: " + steps[current].content}
       placement="right"
-      closable={window.innerWidth < "600" ? true : false}
+      closable={size.width < "600" ? true : false}
       onClose={handleOnDrawerClose}
       visible={visible}
       width={responsive ? "100%" : "500px"}

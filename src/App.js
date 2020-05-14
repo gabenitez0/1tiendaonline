@@ -4,10 +4,11 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // CONTEXT
 import { contextoGlobal } from './estado/contextoGlobal';
 import { ordenReducer, estadoInicial } from './estado/ordenReducer';
+
 //DEPENDENCIAS
 import { Spin } from 'antd';
 
-import OrderPlan from './components/order/OrderPlan';
+const OrderPlan = React.lazy(() => import('./components/order/OrderPlan'));
 
 //PAGES
 const Index = React.lazy(() => import('./pages/index'));

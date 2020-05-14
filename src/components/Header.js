@@ -46,7 +46,7 @@ export default function Header(props) {
                                 (max-width: 300w) 300w,
                                 (max-width: 500w) 500w,
                                 1000px"
-                            src={api+data.image.url} 
+                            src="{api+data.image.url} "
                             alt={data.image.alternativeText}
                             style={{width: '100%', maxWidth: '600px', margin: '16px 4vw'}}/>
                             

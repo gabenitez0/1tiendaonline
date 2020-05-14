@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { contextoGlobal } from '../estado/contextoGlobal';
-
 import {Link} from 'react-router-dom';
+import useWindowSize from '../mixins/useWindowSize';
 
 import logo from '../assets/img/logo.png';
 import { MenuOutlined } from '@ant-design/icons';
@@ -28,8 +28,9 @@ export default function Nav (props) {
     navItems()
   }, [])
 
-  const tabletRes = window.innerWidth > 900;
-  const mobileRes = window.innerWidth < 500;
+  const size = useWindowSize();
+  const tabletRes = size.width > 900;
+  const mobileRes = size.width < 500;
   
   const logoSyle = {
     maxWidth: '210px',
