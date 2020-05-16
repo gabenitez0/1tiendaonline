@@ -72,41 +72,41 @@ function SelectDomainServices({ data, title }) {
     dispatch({ type: 'estimarTotal' });
   }
 
+  const minWidth = {
+    width: '100%',
+    minWidth: 75
+  }
+
   return (
     data.length === 0 
-    ? <Spin size="large" />
-    :<Row gutter={[32, 8]}>
-    <Col sm={7} span={24}>
-      <Text strong>Servicios de {title}</Text>
-    </Col>
-    {/* Area de servicios */}
-    <Col sm={17} span={24}>
+    ? <Spin size="small" />
+    :
       <Row gutter={8} align="middle">
-      <Col span={14}>
-        <Space direction="vertical">
-          {data.map(service => (
-            <Checkbox
-              key={service.id}
-              id={service.id}
-              disabled={
-                orden.servicioDominio.length !== 0
-                ? !orden.servicioDominio.map(item => item.id).includes(service.id)
-                : false
-              }
-              defaultChecked={
-                orden.servicioDominio.length !== 0
-                ? orden.servicioDominio.map(item => item.id).includes(service.id)
-                : false
-              }
-              onChange={handleCheckboxChange}
-            >
-              {service.name}
-            </Checkbox>
-          ))}
-        </Space>
-        </Col>
-        <Col span={5}>
+        <Col flex="1 0 0">
           <Space direction="vertical">
+            {data.map(service => (
+              <Checkbox
+                key={service.id}
+                id={service.id}
+                disabled={
+                  orden.servicioDominio.length !== 0
+                  ? !orden.servicioDominio.map(item => item.id).includes(service.id)
+                  : false
+                }
+                defaultChecked={
+                  orden.servicioDominio.length !== 0
+                  ? orden.servicioDominio.map(item => item.id).includes(service.id)
+                  : false
+                }
+                onChange={handleCheckboxChange}
+              >
+                {service.name}
+              </Checkbox>
+            ))}
+          </Space>
+        </Col>
+        <Col flex="75px">
+          <Space direction="vertical" style={minWidth}>
             {data.map(service => (
               <Select 
                 key={service.id}
@@ -134,7 +134,7 @@ function SelectDomainServices({ data, title }) {
             ))}
           </Space>
         </Col>
-        <Col span={5} style={{ textAlign: "right" }}>
+        <Col flex="65px" style={{ textAlign: "right" }}>
           <Space direction="vertical">
             {data.map(service => (
               <Text key={service.id}>
@@ -143,16 +143,13 @@ function SelectDomainServices({ data, title }) {
                   ?
                   orden.servicioDominio.find(item => item.id === service.id).total
                   : "0"
-                }
+                }<sub style={{bottom: -1}}>/ars</sub>
               </Text>
             ))}
           </Space>
         </Col>
       </Row>
-    </Col>
-  </Row>
-  );
-
+    );
 }
 
 export default SelectDomainServices;

@@ -29,3 +29,11 @@ body, html{
 .popover_planes:hover{
     cursor: help;
 }
+
+.ta-right{
+    text-align: right!important;
+}
+
+.paypal-buttons-context-iframe{
+    vertical-align: middle;
+}

@@ -24,6 +24,7 @@ export default function ResumenCompra() {
         },
         {
             title: 'Precio',
+            align: 'right',
             dataIndex: 'pricePlan',
             key: 'pricePlan',
             width: '25%',
@@ -54,6 +55,7 @@ export default function ResumenCompra() {
         },
         {
             title: 'Total',
+            align: 'right',
             dataIndex: 'total',
             key: 'total',
             width: '25%'
@@ -115,7 +117,7 @@ export default function ResumenCompra() {
                         <Table.Summary.Row style={{ background: '#fafafa' }}>
                             <Table.Summary.Cell>Subtotal</Table.Summary.Cell>
                             <Table.Summary.Cell></Table.Summary.Cell>
-                            <Table.Summary.Cell>
+                            <Table.Summary.Cell className="ta-right">
                                 ${
                                     orden.subTotal + 
                                     orden.serviciosIncluidos
@@ -127,12 +129,12 @@ export default function ResumenCompra() {
                         <Table.Summary.Row style={{ background: '#fafafa' }}>
                             <Table.Summary.Cell>Descuento</Table.Summary.Cell>
                             <Table.Summary.Cell></Table.Summary.Cell>
-                            <Table.Summary.Cell>${orden.planTienda.total}</Table.Summary.Cell>
+                            <Table.Summary.Cell className="ta-right">${orden.planTienda.total}</Table.Summary.Cell>
                         </Table.Summary.Row>
                         <Table.Summary.Row style={{ background: '#fafafa' }}>
                             <Table.Summary.Cell>Total</Table.Summary.Cell>
                             <Table.Summary.Cell></Table.Summary.Cell>
-                            <Table.Summary.Cell>${orden.totalFinal}</Table.Summary.Cell>
+                            <Table.Summary.Cell className="ta-right">${orden.totalFinal}</Table.Summary.Cell>
                         </Table.Summary.Row>      
                     </>                  
                 )}

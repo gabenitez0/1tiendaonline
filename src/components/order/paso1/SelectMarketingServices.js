@@ -73,83 +73,78 @@ function SelectMarketingServices ({title, data }) {
     dispatch({ type: 'estimarTotal' });
   }
 
+  const minWidth = {
+      width: '100%',
+      minWidth: 75
+  }
+
   return (
     data.length === 0 
-    ? <Spin size="large" />
+    ? <Spin size="small" />
     :
-    <Row gutter={[32, 8]}>
-      <Col sm={7} span={24}>
-        <Text strong>Servicios de {title}</Text>
+    <Row gutter={8} align="middle">
+      <Col flex="1 0 0">
+        <Space direction="vertical">
+          {data.map(service => (
+            <Checkbox 
+              key={service.id}
+              id={service.id}
+              defaultChecked={
+                orden.serviciosPublicidad.map(service => service.id).includes(service.id) ? true : false
+              }
+              onChange={handleCheckboxChange}
+            >
+              {service.name}
+            </Checkbox>
+          ))}
+        </Space>
       </Col>
-      {/* Area de servicios */}
-      <Col sm={17} span={24}>
-        <Row gutter={8} align="middle">
-        <Col span={14}>
-          <Space direction="vertical">
-            {data.map(service => (
-              <Checkbox 
-                key={service.id}
-                id={service.id}
-                defaultChecked={
-                  orden.serviciosPublicidad.map(service => service.id).includes(service.id) ? true : false
-                }
-                onChange={handleCheckboxChange}
-              >
-                {service.name}
-              </Checkbox>
-            ))}
-          </Space>
-          </Col>
-          {/* Area de opciones */}
-          <Col span={5}>
-            <Space direction="vertical">
-              {data.map(service => (
-                <Select
-                  key={service.id}
-                  size="small"
-                  onChange={handleSelectChange}
-                  value={
-                    orden.serviciosPublicidad.length !== 0 && orden.serviciosPublicidad.map(item => item.id).includes(service.id)
-                    ? orden.serviciosPublicidad.find(item => item.id === service.id).time
-                    : "Elegir"
-                  }
-                  disabled={
-                    !orden.serviciosPublicidad.map(service => service.id).includes(service.id)
-                  }
+      {/* Area de opciones */}
+      <Col flex="75px">
+        <Space direction="vertical" style={minWidth}>
+          {data.map(service => (
+            <Select
+              key={service.id}
+              size="small"
+              onChange={handleSelectChange}
+              value={
+                orden.serviciosPublicidad.length !== 0 && orden.serviciosPublicidad.map(item => item.id).includes(service.id)
+                ? orden.serviciosPublicidad.find(item => item.id === service.id).time
+                : "Elegir"
+              }
+              disabled={
+                !orden.serviciosPublicidad.map(service => service.id).includes(service.id)
+              }
+            >
+              {service.options.map((option, index) => (
+                <Option
+                  id={service.id} 
+                  key={index}
+                  value={option.price}
                 >
-                  {service.options.map((option, index) => (
-                    <Option
-                      id={service.id} 
-                      key={index}
-                      value={option.price}
-                    >
-                      {option.time}
-                    </Option>
-                  ))}
-                </Select>
+                  {option.time}
+                </Option>
               ))}
-            </Space>
-          </Col>
-          <Col span={5} style={{textAlign: "right"}}>
-              <Space direction="vertical">
-                {data.map(service => (
-                  <Text key={service.id}>
-                    ${
-                        orden.serviciosPublicidad.find(item => item.id === service.id)
-                        ?
-                        orden.serviciosPublicidad.find(item => item.id === service.id).total
-                        :
-                        "0"
-                    }
-                  </Text>
-                ))}
-              </Space>
-            </Col>
-          </Row>
+            </Select>
+          ))}
+        </Space>
+      </Col>
+      <Col flex="65px" style={{textAlign: "right"}}>
+        <Space direction="vertical">
+          {data.map(service => (
+            <Text key={service.id}>
+              ${
+                  orden.serviciosPublicidad.find(item => item.id === service.id)
+                  ?
+                  orden.serviciosPublicidad.find(item => item.id === service.id).total
+                  :
+                  "0"
+              }<sub style={{bottom: -1}}>/ars</sub>
+            </Text>
+          ))}
+        </Space>
       </Col>
     </Row>
-    
-    
   )
 }
 

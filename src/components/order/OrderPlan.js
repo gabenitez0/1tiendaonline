@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
-import useWindowSize from '../../mixins/useWindowSize'
+import useWindowSize from '../../mixins/useWindowSize';
+import Paypal from './mediosPago/Paypal';
 
 import SelectPlan from './paso1/SelectPlan';
 import SelectGraphicServices from './paso1/SelectGraphicServices';
@@ -36,6 +37,7 @@ export default function OrderPlan (props) {
   const [buttonLoading, setButtonLoading] = useState(false);
 
   useEffect(() => {
+
       fetch('https://api.1tiendaonline.com/graphic-designs')
       .then(data => data.json())
       .then(data => setDataDesign(data));
@@ -76,6 +78,10 @@ export default function OrderPlan (props) {
   const size = useWindowSize();
   const responsive = size.width < "500"
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
+  const product = {
+    price: 10,
+    name: 'product test'
+  }
 
   const handleOnDrawerClose = () => {
 
@@ -143,6 +149,45 @@ export default function OrderPlan (props) {
   }
 
   const goToPayment = () => {
+
+    if(orden.metodoDePago === "MercadoPago") {
+      setButtonLoading(true);
+      dispatch({
+        type: 'estaEnProcesoDePago',
+        payload: {
+          enProceso: true
+        }
+      });
+
+      // SDK de Mercado Pago
+      const mercadopago = require ('mercadopago');
+  
+      // Agrega credenciales    
+      mercadopago.configure({
+        sandbox: true,
+        access_token: 'TEST-1912802638413668-013002-510a91a112b7222641c5ca8914999ea6-67919268'
+      });
+
+      let preference = {
+        items: [
+          {
+            title: 'Mi producto',
+            unit_price: 100,
+            quantity: 1,
+          }
+        ]
+      };
+
+      mercadopago.preferences.create(preference)
+        .then(function(mpResponse){
+          console.log(mpResponse);
+        })
+        .catch(function(mpError){
+          console.log(mpError);
+          message.error('Hay un error con el medio de pago seleccionado.')
+        });
+
+    }
     
     // Esta condicional es una simulación; en este caso solo funcionar con PayPal para efecto de demostración.
     if(orden.metodoDePago === "Paypal") {
@@ -162,8 +207,79 @@ export default function OrderPlan (props) {
           enProceso: true
         }
       });
+      
+      /* const product = {
+        price: 10,
+        name: 'product test'
+      }
+      if (loaded){
+        setTimeout(() => {
+          window.paypal
+          .Buttons({
+            createOrder: (data, actions) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    description: product.description,
+                    amount: {
+                      currency_code: 'USD',
+                      value: product.price,
+                    },
+                  },
+                ],
+              });
+            },
+            onApprove: async (data, actions) => {
+              const order = await actions.order.capture();
+              setPaidFor(true);
+              console.log(order);
+              dispatch({
+                type: 'establecerDrawerStep',
+                payload: {
+                  step: orden.stateCurrent + 1
+                }
+              })
+            },
+            onError: err => {
+              setError(err);
+              console.error(err);
+              message.error('Sucedio un error en el proceso de pago.')
+              dispatch({
+                type: 'estaEnProcesoDePago',
+                payload: {
+                  enProceso: false
+                }
+              })
+            },
+          })
+          .render(paypalRef.current)
+        })
+      } */
+      
 
-      // Este setTimeout simulara la ejecución del metodo correspondiente al metodo de pago
+        /* if (paidFor) {
+          setButtonLoading(false);
+          return (
+            dispatch({
+              type: 'establecerDrawerStep',
+              payload: {
+                step: orden.stateCurrent + 1
+              }
+            })
+          );
+        } else {
+          message.error('Sucedio un error en el proceso de pago.')
+          console.log(error)
+        }
+        dispatch({
+          type: 'estaEnProcesoDePago',
+          payload: {
+            enProceso: false
+          }
+        }); */
+
+
+      /*// Este setTimeout simulara la ejecución del metodo correspondiente al metodo de pago
       // donde la puede que el pago se lleve de manera exitosa o no.
       setTimeout(() => {
         setButtonLoading(false);
@@ -198,7 +314,7 @@ export default function OrderPlan (props) {
       }, 5000)
 
     } else {
-      message.error('Hay un error con el medio de pago seleccionado!')
+      message.error('Hay un error con el medio de pago seleccionado!') */
     }
 
   }
@@ -235,7 +351,7 @@ export default function OrderPlan (props) {
                 </Button>
               }
               {orden.stateCurrent === 1 &&
-                <Button 
+                <><Button 
                   type="primary"
                   onClick={goToPayment}
                   loading={buttonLoading}
@@ -248,6 +364,8 @@ export default function OrderPlan (props) {
                     : "Elegir medio de pago"
                   }
                 </Button>
+                <Paypal product={product}/>
+               </>
               }
               {orden.stateCurrent === steps.length -1 &&
                 <Button 
@@ -371,5 +489,5 @@ export default function OrderPlan (props) {
         )}
 
       </Drawer>
-  );
+  )
 }

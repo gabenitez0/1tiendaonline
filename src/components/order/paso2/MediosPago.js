@@ -52,6 +52,7 @@ export default function MediosPago() {
                 <Radio 
                     value={service.name} 
                     key={service.id}
+                    style={{whiteSpace: 'pre-wrap'}}
                     disabled={
                         orden.metodoDePago !== service.name && orden.estaEnProcesoDePago === true   
                     }

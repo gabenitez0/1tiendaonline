@@ -80,91 +80,88 @@ function SelectGraphicServices({ title, data }) {
         });
     }
 
-    
+    const minWidth = {
+        width: '100%',
+        minWidth: 75
+    }
+
     return (
         data.length === 0
-            ? <Spin size="large" />
-            :
-            <Row gutter={[32, 8]}>
-                <Col sm={7} span={24}>
-                    <Text strong>Servicios de {title}</Text>
+            ? <Spin size="small" />
+            : <>
+            <Row gutter={8} align="middle">
+                <Col flex="1 0 0">
+                    <Space direction="vertical">
+                        {data.map(service => (
+                            <Checkbox
+                                key={service.id}
+                                id={service.id}
+                                onChange={onCheckboxChange}
+                                defaultChecked={
+                                    orden.serviciosDiseno.length > 0
+                                    ?
+                                    orden.serviciosDiseno.map(designService => designService.id).includes(service.id)
+                                    :
+                                    false
+                                }
+                            >
+                                {service.name}
+                            </Checkbox>
+                        ))}
+                    </Space>
                 </Col>
-                <Col sm={17} span={24}>
-                    <Row gutter={8} align="middle">
-                        <Col span={14}>
-                            <Space direction="vertical">
-                                {data.map(service => (
-                                    <Checkbox
-                                        key={service.id}
+                <Col flex="75px">
+                    <Space direction="vertical" style={minWidth}>
+                        {data.map(service => (
+                            <Select
+                                key={service.id}
+                                size="small"
+                                onChange={onSelectChange}
+                                value={
+                                    orden.serviciosDiseno.find(item => item.id === service.id)
+                                    ?
+                                    orden.serviciosDiseno.find(item => item.id === service.id).qty
+                                    :
+                                    "Elegir"
+                                }
+                                disabled={
+                                    orden.serviciosDiseno.length > 0 && orden.serviciosDiseno.map(servicio => servicio.id).includes(service.id)
+                                    ?
+                                    false
+                                    :
+                                    true
+                                }
+                            >
+                                {service.qty.map((option, index) => (
+                                    <Option
                                         id={service.id}
-                                        onChange={onCheckboxChange}
-                                        defaultChecked={
-                                            orden.serviciosDiseno.length > 0
-                                            ?
-                                            orden.serviciosDiseno.map(designService => designService.id).includes(service.id)
-                                            :
-                                            false
-                                        }
+                                        key={index}
+                                        value={option}
+                                    
                                     >
-                                        {service.name}
-                                    </Checkbox>
+                                        {option}
+                                    </Option>
                                 ))}
-                            </Space>
-                        </Col>
-                        <Col span={5}>
-                            <Space direction="vertical">
-                                {data.map(service => (
-                                    <Select
-                                        key={service.id}
-                                        size="small"
-                                        onChange={onSelectChange}
-                                        value={
-                                            orden.serviciosDiseno.find(item => item.id === service.id)
-                                            ?
-                                            orden.serviciosDiseno.find(item => item.id === service.id).qty
-                                            :
-                                            "Elegir"
-                                        }
-                                        disabled={
-                                            orden.serviciosDiseno.length > 0 && orden.serviciosDiseno.map(servicio => servicio.id).includes(service.id)
-                                            ?
-                                            false
-                                            :
-                                            true
-                                        }
-                                    >
-                                        {service.qty.map((option, index) => (
-                                            <Option
-                                                id={service.id}
-                                                key={index}
-                                                value={option}
-                                            
-                                            >
-                                                {option}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                ))}
-                            </Space>
-                        </Col>
-                        <Col span={5} style={{ textAlign: "right" }}>
-                            <Space direction="vertical">
-                                {data.map(service => (
-                                    <Text key={service.id}>
-                                        ${
-                                            orden.serviciosDiseno.find(item => item.id === service.id)
-                                            ?
-                                            orden.serviciosDiseno.find(item => item.id === service.id).total
-                                            : 
-                                            "0"
-                                        }
-                                    </Text>
-                                ))}
-                            </Space>
-                        </Col>
-                    </Row>
+                            </Select>
+                        ))}
+                    </Space>
                 </Col>
-            </Row>
+                <Col flex="65px" style={{ textAlign: "right" }}>
+                    <Space direction="vertical">
+                        {data.map(service => (
+                            <Text key={service.id}>
+                                ${
+                                    orden.serviciosDiseno.find(item => item.id === service.id)
+                                    ?
+                                    orden.serviciosDiseno.find(item => item.id === service.id).total
+                                    : 
+                                    "0"
+                                }<sub style={{bottom: -1}}>/ars</sub>
+                            </Text>
+                        ))}
+                    </Space>
+                </Col>
+            </Row></>
     )
 }
 
