@@ -351,20 +351,26 @@ export default function OrderPlan (props) {
                 </Button>
               }
               {orden.stateCurrent === 1 &&
-                <><Button 
-                  type="primary"
-                  onClick={goToPayment}
-                  loading={buttonLoading}
-                  disabled={
-                    orden.metodoDePago === ""
-                  }
-                >
-                  {orden.metodoDePago !== ""
-                    ? "Pagar con " + orden.metodoDePago
-                    : "Elegir medio de pago"
-                  }
-                </Button>
-                <Paypal product={product}/>
+                <>
+                {orden.metodoDePago === "" &&
+                  <Button 
+                    type="primary"
+                    disabled={
+                      orden.metodoDePago === ""
+                    }
+                  >
+                    Continuar
+                  </Button>
+                }
+                {orden.metodoDePago === "Paypal" &&
+                  <Paypal product={product} />
+                }
+                {orden.metodoDePago === "MercadoPago" && 
+                  <Button type="primary">MercadoPago</Button>
+                }
+                {orden.metodoDePago === "Transferencia Bancaria" &&
+                  <Button type="dashed">Transferencia Bancaria</Button>
+                }
                </>
               }
               {orden.stateCurrent === steps.length -1 &&
