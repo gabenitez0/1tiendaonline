@@ -46,38 +46,33 @@ export default function SelectPlan({ data }) {
     }
 
     return (
-        <Row gutter={[32, 8]}>
-            <Col sm={7} span={24}>
+        <Row align="middle" justify="space-between">
+            <Col flex="1 0 170px">
                 <Text strong>Plan de tienda</Text>
             </Col>
-            <Col sm={17} span={24}>
-                <Row align="middle" justify="space-between">
-                    <Col span={12}>
-                        <Select 
-                            defaultValue={orden.planTienda.name !== undefined ? orden.planTienda.name : "Seleccionar"}
-                            style={{width: 200}}
-                            onChange={handleOnChange}
-                        >    
-                        {data.map(e =>
-                            <Option
-                                id={e.id} 
-                                key={e.id}
-                                value={e.price}
-                            >
-                                {e.name}
-                            </Option>
-                        )}
-                            <Option value="No sé" key="0">
-                                No sé
-                            </Option>
-                        </Select>
-                    </Col>
-                    <Col span={6} style={{textAlign: "right"}}>
-                        <Text>
-                            ${ orden.planTienda.total !== undefined ? orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
-                        </Text>
-                    </Col>
-                </Row>
+            <Col flex="1 0 150px">
+                <Select 
+                    defaultValue={orden.planTienda.name !== undefined ? orden.planTienda.name : "Seleccionar"}
+                    onChange={handleOnChange}
+                >    
+                {data.map(e =>
+                    <Option
+                        id={e.id} 
+                        key={e.id}
+                        value={e.price}
+                    >
+                        {e.name}
+                    </Option>
+                )}
+                    <Option value="No sé" key="0">
+                        No sé
+                    </Option>
+                </Select>
+            </Col>
+            <Col flex="0 0 65px" style={{textAlign: "right"}}>
+                <Text>
+                    ${ orden.planTienda.total !== undefined ? orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
+                </Text>
             </Col>
         </Row>
     )
