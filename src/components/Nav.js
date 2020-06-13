@@ -10,11 +10,7 @@ import {Space, Button, Row, Col, Layout, Divider, Typography} from 'antd';
 const {Header} = Layout;
 const { Text } = Typography;
 
-const MobileMenu = React.lazy(() => import('./MobileMenu'));
-
 export default function Nav (props) {
-
-  const [menuVisible, setMenuVisible] = useState(false);
   
   const { orden, dispatch } = useContext(contextoGlobal);
 
@@ -46,20 +42,22 @@ export default function Nav (props) {
     position: 'sticky',
     top: 0,
     zIndex: 1,
-    width: '100%'
+    width: '100%',
+    borderBottom: '1px solid rgb(230, 239, 244)'
   }
   const navStyle = {
     position: 'relative',
-    top: '4px'
+    top: 2
   }
   const navLinkStyle = {
     padding: '8px 0'
   }
   const menuIcon = {
-    padding: '8px',
-    fontSize: mobileRes ? '18px' : '20px',
+    padding: 8,
+    fontSize: mobileRes ? 18 : 20,
     position: 'relative',
-    top: '5px',
+    top: 5,
+    marginLeft: -8
   }
 
   return (
@@ -84,7 +82,7 @@ export default function Nav (props) {
                 </Space>
               </Space> :
               <Space size={mobileRes ? 4 : 8} align="center">
-                <MenuOutlined style={menuIcon} onClick={() => setMenuVisible(true)}/>
+                <MenuOutlined style={menuIcon} onClick={() => props.setMenuVisible(true)}/>
                 <Link to="/"><img src={logo} alt="logo" style={logoSyle}/></Link>
               </Space>
             }
@@ -92,9 +90,19 @@ export default function Nav (props) {
             <Col span={6}>
               <Row justify="end">
                 <Space>
-                {tabletRes && <Button type="link" style={navStyle}><Text strong>Contacto</Text></Button>}
+                  {tabletRes && 
+                  <Button 
+                    type="link" 
+                    style={navStyle}
+                    onClick={() => {
+                      document.body.style.overflow = 'hidden';
+                      document.body.style.width = 'calc(100% - 17px)';
+                      props.setContactVisible(true)}}>
+                      <Text strong>Contacto</Text>
+                  </Button>}
                   <Button
                     type="primary"
+                    size={size.width < 350 ? 'small' : 'default'}
                     style={navStyle} 
                     onClick={() => {
                       dispatch({
@@ -103,16 +111,15 @@ export default function Nav (props) {
                           visible: true
                         }
                       });
-                    }}
-                  >
-                    {orden.costoTotal <= 0 ? 'Empezar' : 'Continuar'}
+                    document.body.style.width = 'calc(100% - 17px)'
+                    }}>
+                    {orden.subTotal <= 0 ? 'Empezar' : 'Continuar'}
                   </Button>
                 </Space>
               </Row>
             </Col>
           </Row>
         </Header>
-        <MobileMenu visible={{menuVisible, setMenuVisible}} mobileRes={mobileRes}/>
     </section>
   )
 }

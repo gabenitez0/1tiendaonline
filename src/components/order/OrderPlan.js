@@ -4,6 +4,8 @@ import { contextoGlobal } from '../../estado/contextoGlobal';
 
 import useWindowSize from '../../mixins/useWindowSize';
 import Paypal from './mediosPago/Paypal';
+import MercadoPago from './mediosPago/MercadoPago';
+import Contacto from './mediosPago/Contacto';
 
 import SelectPlan from './paso1/SelectPlan';
 import SelectGraphicServices from './paso1/SelectGraphicServices';
@@ -11,18 +13,24 @@ import SelectMarketingServices from './paso1/SelectMarketingServices';
 import SelectDomainServices from './paso1/SelectDomainServices';
 
 import ResumenCompra from './paso2/ResumenCompra';
+import DatosCliente from './paso2/DatosCliente';
 import MediosPago from './paso2/MediosPago';
 
-import { Form, Drawer, Steps, Divider, Button, Row, Col, Typography, Space, message } from 'antd';
+import PedidoCompleto from './paso3/PedidoCompleto';
+
+import { List, Drawer, Steps, Divider, Button, Row, Col, Typography, Space, message, Alert } from 'antd';
 const { Text } = Typography;
 const { Step } = Steps;
 
-message.config({
+/* message.config({
   maxCount: 1,
   getContainer: document.getElementById('message-container')
-});
+}); */
 
 export default function OrderPlan (props) {
+
+  const [contactVisible, setContactVisible] = useState(false);
+  const [contactData, setContactData] = useState([]);
 
   const { orden, dispatch } = useContext(contextoGlobal);
 
@@ -34,7 +42,7 @@ export default function OrderPlan (props) {
 
   const [dataDomain, setDataDomain] = useState([]);
 
-  const [buttonLoading, setButtonLoading] = useState(false);
+  /* const [buttonLoading, setButtonLoading] = useState(false); */
 
   useEffect(() => {
 
@@ -78,12 +86,9 @@ export default function OrderPlan (props) {
   const size = useWindowSize();
   const responsive = size.width < "500"
   const plain = {fontSize: '14px', color: 'rgba(0,0,0,.65)'}
-  const product = {
-    price: 10,
-    name: 'product test'
-  }
 
   const handleOnDrawerClose = () => {
+    document.body.style.width = null
 
     // Este dispatch se utilizara para indicar si el modal deberia de estar abierto o no.
     dispatch({
@@ -144,11 +149,11 @@ export default function OrderPlan (props) {
       const servicioDominio = orden.servicioDominio.filter(servicio => servicio.necesitaAyuda === true);
       return [...serviciosDiseno, ...serviciosPublicidad, ...servicioDominio];
     } else {
-      return false;
+      return [];
     }
   }
 
-  const goToPayment = () => {
+  /* const goToPayment = () => {
 
     if(orden.metodoDePago === "MercadoPago") {
       setButtonLoading(true);
@@ -187,10 +192,10 @@ export default function OrderPlan (props) {
           message.error('Hay un error con el medio de pago seleccionado.')
         });
 
-    }
+    } */
     
     // Esta condicional es una simulación; en este caso solo funcionar con PayPal para efecto de demostración.
-    if(orden.metodoDePago === "Paypal") {
+    /* if(orden.metodoDePago === "Paypal") {
 
       // Se deberia de habiliar el botón con un icono de loading para hacer notar al 
       // usuario que se esta llevando a pago el pago con el medio seleccionado.
@@ -314,10 +319,33 @@ export default function OrderPlan (props) {
       }, 5000)
 
     } else {
-      message.error('Hay un error con el medio de pago seleccionado!') */
+      message.error('Hay un error con el medio de pago seleccionado!')
     }
+  } */
 
+  const dataSeRequiereAyuda = serviciosQueRequierenAtencion().map(servicio => servicio.name);
+  if(orden.planTienda.necesitaAyuda === true) {
+    dataSeRequiereAyuda.unshift("Elección de plan de tienda")
   }
+
+  const dataTransfer = [{
+    title: 'Pagar por transferencia bancaria',
+    text: 'Depositar el dinero en la siguiente cuenta:',
+    line1: '1430001713004964240016',
+    line2: 'gabenitez.ars',
+    total: 'Total a pagar: $'+orden.totalFinal+'/ars',
+    button1: 'Volver',
+    button2: 'Ya realicé el pago'
+  }]
+  const dataMercadoPago = [{
+    title: 'Pagar por MercadoPago',
+    text: 'Actualmente estamos implementando el pago directo por MercadoPago.',
+    line1: 'Hasta entonces deberás ponerte en contacto con nosotros para enviarte el enlace de pago.',
+    line2: 'Puedes utilizar el boton de Contacto que te dejamos a continuación y enviarnos una captura de tu pedido o simplemente escribirnos los servicios que incluye tu pedido.',
+    total: 'Total a pagar: $'+orden.totalFinal+'/ars',
+    button1: 'Contacto',
+    button2: 'Ya realicé el pago'
+  }]
 
   return (
       <Drawer
@@ -330,9 +358,9 @@ export default function OrderPlan (props) {
         footer={
           <Row justify="space-between" align="middle">
             <Col>
-              {orden.stateCurrent === 0 && (
+              {orden.stateCurrent === 0 &&
                 <Text>Subtotal: ${orden.subTotal}</Text>
-              )}
+              }
             </Col>
             <Col>
               <Space>
@@ -350,7 +378,18 @@ export default function OrderPlan (props) {
                   Continuar
                 </Button>
               }
-              {orden.stateCurrent === 1 &&
+              {orden.stateCurrent === 1 && (
+                seRequireAyuda ?
+                  <Button type="primary">
+                    <a 
+                    href={"https://api.whatsapp.com/send?phone=5491122542474&text=Hola, necesito ayuda con: "+dataSeRequiereAyuda} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    id="tag-contacto">
+                      Contactar por Whatsapp
+                    </a>
+                  </Button>
+                :
                 <>
                 {orden.metodoDePago === "" &&
                   <Button 
@@ -363,15 +402,37 @@ export default function OrderPlan (props) {
                   </Button>
                 }
                 {orden.metodoDePago === "Paypal" &&
-                  <Paypal product={product} />
+                  <Paypal changeStep={changeStep} />
                 }
-                {orden.metodoDePago === "MercadoPago" && 
-                  <Button type="primary">MercadoPago</Button>
+                {orden.metodoDePago === "MercadoPago" && <>
+                  <MercadoPago changeStep={changeStep} />
+                  {/* <Button 
+                  type="primary"
+                  onClick={() => {
+                    setContactVisible(true)
+                    setContactData(dataMercadoPago)
+                  }}>
+                      MercadoPago
+                  </Button> */} </>
                 }
                 {orden.metodoDePago === "Transferencia Bancaria" &&
-                  <Button type="dashed">Transferencia Bancaria</Button>
+                  <Button 
+                  type="primary" 
+                  onClick={() => {
+                    setContactVisible(true)
+                    setContactData(dataTransfer)
+                  }}>
+                    Transferencia Bancaria
+                  </Button>
                 }
+                <Contacto 
+                contactVisible={contactVisible} 
+                setContactVisible={setContactVisible}
+                contactData={contactData}
+                changeStep={changeStep}
+                />
                </>
+              )
               }
               {orden.stateCurrent === steps.length -1 &&
                 <Button 
@@ -407,92 +468,57 @@ export default function OrderPlan (props) {
         
         {orden.stateCurrent === 0 && (
           <>
-            <Divider style={plain}>Tienda Online</Divider>
+            <Divider style={plain}>Armar plan</Divider>
 
-            <Form>
-              <Form.Item>
-                <SelectPlan data={dataPlanes} responsive={responsive} />
-              </Form.Item>
+            <Alert banner message="A continuación podes armar tu plan a medida seleccionando únicamente los servicios y productos que vas a necesitar." type="info" style={{marginBottom: 24}}/>
 
-              <Divider style={plain}>Diseño Gráfico</Divider>
+            <SelectPlan data={dataPlanes} handleOnDrawerClose={handleOnDrawerClose}/>
 
-              <Form.Item>
-                <SelectGraphicServices title="diseño" responsive={responsive} data={dataDesign} />
-              </Form.Item>
+            <Divider/>
 
-              <Divider style={plain}>Publicidad y Marketing</Divider>
+            <SelectGraphicServices title="diseño" data={dataDesign} />
 
-              <Form.Item>
-                <SelectMarketingServices title="publicidad" responsive={responsive} data={dataMarketing} />
-              </Form.Item>
+            <Divider/>
 
-              <Divider style={plain}>Dominios</Divider>
+            <SelectMarketingServices title="publicidad" data={dataMarketing} />
 
-              <Form.Item>
-                <SelectDomainServices title="dominio" responsive={responsive} data={dataDomain} />
-              </Form.Item>
+            <Divider/>
 
-            </Form>
+            <SelectDomainServices title="dominio" data={dataDomain} />
           </>
         )}
 
         {orden.stateCurrent === 1 && (
-          seRequireAyuda ? 
-            <>
-              <h1>Algo necesita de atencións</h1>
-              {orden.planTienda.necesitaAyuda && (
-                <h3>Se necesita ayuda para elegir un plan</h3>
-              )}
-              <ul>
-                {serviciosQueRequierenAtencion().map(servicio => (
-                  <li key={servicio.id}>{servicio.name}</li>
-                ))}
-              </ul>
-            </>
+          seRequireAyuda ?
+          <>
+            <Divider style={plain}>Se requiere atención</Divider>
+            <Space direction="vertical" style={{width: '100%'}}>
+              <List 
+              dataSource={dataSeRequiereAyuda}
+              header={<Alert banner message="Uno o más elementos requieren de atención:" type="warning" />}
+              size="small"
+              renderItem={item => (
+                <List.Item>• {item}</List.Item>
+              )}/>
+              <Divider style={plain}>¿Qué hacer?</Divider>
+              <Alert banner message="Antes de realizar algún pago, le recomendamos que se ponga en contacto con nosotros para resolver sus dudas y ayudarlo a elegir. Puede hacerlo desde cualquier boton de contacto o incluso utilizando el boton que está en la parte inferior. Tiempo de respuesta: 5 minutos." type="info" />
+            </Space>
+          </>
           :
           <>
           <Divider style={plain}>Resumen del pedido</Divider>
           <ResumenCompra />
-          <Divider style={plain}>Medios de pago</Divider>
+          {/* <Divider style={plain}>Completar datos</Divider>
+          <DatosCliente /> */}
+          <Divider style={plain}>Elegir medio de pago</Divider>
           <MediosPago />
           </>
         )}
 
-        {orden.stateCurrent === steps.length - 1 && (
-          <>
-            <h1 style={{color: 'red'}}>Aqui se deberia de mostrar el resumen de la compra o cualquier cosa en caso de que todo se haya estado bien</h1>
-            <h2>{orden.planTienda.name}</h2>
-            <span>{orden.planTienda.total}</span>
-            <Divider></Divider>
-            <h2>Servicios de diseño</h2>
-            {orden.serviciosDiseno.map(servicio => (
-              <>
-                <h3>{servicio.name}</h3>
-                <p>cantidad: {servicio.qty}</p>
-                <p>total: {servicio.total}</p>
-              </>
-            ))}
-            <Divider></Divider>
-            <h2>Servicios publcidad y marketing</h2>
-            {orden.serviciosPublicidad.map(servicio => (
-              <>
-                <h3>{servicio.name}</h3>
-                <p>tiempo: {servicio.time}</p>
-                <p>total: {servicio.total}</p>
-              </>
-            ))}
-            <h2>Servicios incluidos</h2>
-            {orden.serviciosIncluidos.map(servicio => (
-              <>
-                <h3>{servicio.name}</h3>
-                <p>tiempo: {servicio.time}</p>
-                <p>total: {servicio.total}</p>
-              </>
-            ))}
-            <Divider></Divider>
-            <h4>total: {orden.totalFinal}</h4>
-          </>
-        )}
+        {orden.stateCurrent === steps.length - 1 && ( <>
+          <Divider/>
+          <PedidoCompleto />
+        </>)}
 
       </Drawer>
   )

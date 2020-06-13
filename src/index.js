@@ -4,7 +4,6 @@ import App from './App';
 import './index.css';
 import 'antd/dist/antd.css';
 
-ReactDOM.render(
-    <App />,
-  document.getElementById('root')
-);
+ReactDOM.hydrate(
+        <App />, 
+document.getElementById('main'))

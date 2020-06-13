@@ -1,50 +1,54 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
+import {contextoGlobal} from '../../../estado/contextoGlobal';
 
-export default function Product({ product }) {
-    const [error, setError] = useState(null);
-    const paypalRef = useRef();
-  
-    useEffect(() => {
-      window.paypal
-        .Buttons({
-        locale: 'es_AR',
-        style: {
-            height: 32,
-            size: 'responsive',
-            color: 'blue',
-            layout: 'horizontal',
-            tagline: 'false',
-            label: 'pay'
-        },
-        createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  description: product.description,
-                  amount: {
-                    currency_code: 'USD',
-                    value: product.price,
-                  },
+import {message} from 'antd';
+
+export default function Product({changeStep}) {
+  const { orden } = useContext(contextoGlobal);
+  const paypalRef = useRef();
+
+  const product = {
+    price: orden.totalFinal/100,
+    name: 'Orden de compra 1tiendaonline'
+  }
+
+  useEffect(() => {
+    window.paypal
+      .Buttons({
+      style: {
+          height: 32,
+          size: 'responsive',
+          color: 'blue',
+          layout: 'horizontal',
+          tagline: 'false',
+          label: 'pay'
+      },
+      createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [
+              {
+                description: product.description,
+                amount: {
+                  currency_code: 'USD',
+                  value: product.price,
                 },
-              ],
-            });
-          },
-          onApprove: async (data, actions) => {
-            const order = await actions.order.capture();
-            console.log(order);
-          },
-          onError: err => {
-            setError(err);
-            console.error(err);
-          },
-        })
-        .render(paypalRef.current);
-    }, [product.description, product.price]);
+              },
+            ],
+          });
+        },
+        onApprove: async (data, actions) => {
+          message.success('Pago realizado con exito.');
+          changeStep();
+          /* const order = await actions.order.capture();
+          console.log(order); */
+        },
+        onError: err => {
+          message.error(err)
+          console.error(err);
+        },
+      })
+      .render(paypalRef.current);
+  }, [product.description, product.price]);
   
-    return (
-      <div>
-        {error && <div>Uh oh, an error occurred! {error.message}</div>}
-        <div ref={paypalRef}></div>
-      </div>
-    );
+  return <div ref={paypalRef}></div>
 }

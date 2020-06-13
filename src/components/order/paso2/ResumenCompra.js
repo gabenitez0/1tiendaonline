@@ -16,7 +16,7 @@ export default function ResumenCompra() {
             width: '50%'
         },
         {
-            title: 'Sin cargo',
+            title: 'Promo',
             dataIndex: 'promo',
             key: 'promo',
             width: '25%',

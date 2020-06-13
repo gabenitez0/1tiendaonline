@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Fade from 'react-reveal/Fade';
 
 //DEPENDENCIAS
-import {Layout, Typography, Row, Col, Space} from 'antd';
+import Fade from 'react-reveal/Fade';
+import ProgressiveImage from "react-progressive-graceful-image";
+import useWindowSize from '../mixins/useWindowSize';
+import {Layout, Typography, Row, Col, Space, Skeleton} from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
@@ -18,20 +20,56 @@ export default function Features ({ feature }) {
         
         dataFeature();
     }, [feature])
-    
+
+    const size = useWindowSize();
+    const tablet = size.width <= 767
+
+    const api = "https://api.1tiendaonline.com";
+    const loading = dataFeature.length === 0 ? true : false
+
     const featureStyles = {
-        margin: '12vh auto'
+        padding: '12vh 0'
+    }
+    const loadingStyle = {
+        padding: loading && '8vh 0'
     }
 
+    
     return (
-        dataFeature.map(e =>
-            <section id="feature" style={{background: e.rowReverse ? '#f7fbff' : '#fff'}} key={e.id}>
-                <Content className="container" style={featureStyles}>
+        <section id="feature" className="container" style={loadingStyle}>
+        <Skeleton active loading={loading}>
+        {dataFeature.map(e =>
+            <div style={{background: e.rowReverse ? '#f7fbff' : '#fff'}} key={e.id}>
+                <Content style={featureStyles}>
                     <Row align="middle" style={{flexDirection:  e.rowReverse === true ? 'row-reverse' : 'row'}}>
-                        <Col md={12}>
-                        <Fade bottom>
-                            <img src={"https://api.1tiendaonline.com"+e.image.url} alt={e.image.alternativeText} style={{maxWidth: '135%', position:'relative', left: e.rowReverse ? '5%' : '-40%'}}/>
-                        </Fade>
+                        <Col md={12} style={{width: '100%'}}>
+                            <Fade bottom>
+                                <ProgressiveImage
+                                    src={api+e.image.url}
+                                    srcSetData={{
+                                        srcSet: e.image.map((a, i) => 
+                                        `${api+a.url} ${500 + 200 * i+'w'}`).join(', '),
+                                        sizes: '(max-width: 520px) 500px, 700px'
+                                    }}
+                                    placeholder={api+e.lazyImage.url}
+                                >
+                                    {(src, loading, srcSetData) => <img 
+                                        src={src}
+                                        srcSet={srcSetData.srcSet}
+                                        sizes={srcSetData.sizes}
+                                        alt={e.title}
+                                        style={{
+                                            filter: loading ? 'blur(15px)' : 'blur(0)',
+                                            transition: 'all .5s ease',
+                                            position:'relative', 
+                                            width: tablet ? '100%' : '135%', 
+                                            maxWidth: 700, 
+                                            left: tablet ? 0 : e.rowReverse ? '5%' : '-40%',
+                                            marginBottom: tablet ? 24 : 0
+                                        }}
+                                    />}
+                                </ProgressiveImage>
+                            </Fade>
                         </Col>
                         <Col md={12}>
                         <Fade>
@@ -50,7 +88,9 @@ export default function Features ({ feature }) {
                         </Col>
                     </Row>
                 </Content>
-            </section>
-        )
+            </div>
+        )}
+        </Skeleton>
+        </section>
     )
 }

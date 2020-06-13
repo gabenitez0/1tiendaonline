@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Fade from 'react-reveal/Fade';
 
 //DEPENDENCIAS
-import { Layout, Row, Typography, Button, Col, Space } from 'antd';
+import Fade from 'react-reveal/Fade';
+import ProgressiveImage from "react-progressive-graceful-image";
+import useWindowSize from '../mixins/useWindowSize';
+import { Layout, Row, Typography, Button, Col, Space, Skeleton } from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
@@ -18,6 +20,9 @@ export default function Header(props) {
         data();
     }, [props.page])
 
+    const size = useWindowSize();
+    const tablet = size.width <= 767
+
     const headerBg = {
         background: 'linear-gradient(-15deg, rgb(243, 249, 255), white 50%)'
     }
@@ -25,31 +30,38 @@ export default function Header(props) {
         padding: '8vh 0',
         display: 'flex',
         flexDirection: 'row-reverse',
-        alignItems: 'center'
+        alignItems: 'center',
+        textAlign: tablet ? 'center' : 'left'
     }
 
     const api = "https://api.1tiendaonline.com";
+    const loading = data.length === 0 ? true : false
     
     return (
         <section id="header" style={headerBg}>
             <Content className="container">
                 <Fade cascade>
                 <Row key={data.id} align="middle" style={header}>
-                    <Col md={14}> 
-                    {data.image &&
-                        <img
-                            srcSet={`
-                            ${(api+data.image.formats.thumbnail.url)} 300w,
-                            ${(api+data.image.formats.small.url)} 500w,
-                            ${(api+data.image.url)} 1000w`}
-                            sizes="
-                                (max-width: 300w) 300w,
-                                (max-width: 500w) 500w,
-                                1000px"
-                            src="{api+data.image.url} "
-                            alt={data.image.alternativeText}
-                            style={{width: '100%', maxWidth: '600px', margin: '16px 4vw'}}/>
-                            
+                <Skeleton active loading={loading}>
+                    <Col md={14} style={{width: '100%'}}> 
+                        {data.image && data.lazyImage &&
+                            <ProgressiveImage
+                                src={api+data.image.url}
+                                placeholder={api+data.lazyImage.url}
+                            >
+                                {(src, loading) => <img 
+                                    src={src} 
+                                    alt={data.image.alternativeText} 
+                                    style={{
+                                        filter: loading ? 'blur(5px)' : 'blur(0)',
+                                        transition: 'all .5s ease',
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        maxWidth: '600px', 
+                                        margin: tablet ? '0 0 16px' : '16px 4vw'
+                                    }}
+                                />}
+                            </ProgressiveImage>
                         }
                     </Col>
                     <Col md={10}>
@@ -60,13 +72,26 @@ export default function Header(props) {
                             <Text strong>
                                 {data.desc}
                             </Text>
-                            <Link to="/planes">
-                                <Button type="primary" size="large" style={{marginTop: '8px'}}>
+                            <Space style={{marginTop: '8px'}}>
+                            <a
+                            href={data.buttonUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            id="tag-contacto">
+                                <Button type="primary" size="large">
                                     {data.button}
                                 </Button>
-                            </Link>
+                            </a>
+                            {data.comment === 'index' &&
+                            <Link to="/planes">
+                                <Button type="link">
+                                    Ver planes
+                                </Button>
+                            </Link>}
+                            </Space>
                         </Space>
                     </Col>
+                </Skeleton>
                 </Row>
                 </Fade>
             </Content>

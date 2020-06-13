@@ -6,28 +6,34 @@ import { contextoGlobal } from './estado/contextoGlobal';
 import { ordenReducer, estadoInicial } from './estado/ordenReducer';
 
 //DEPENDENCIAS
-import { Spin } from 'antd';
+import { Spin, Layout } from 'antd';
 import Contacto from './components/Contacto';
-const Layout = React.lazy(() => import('antd/lib/layout'));
 
 //PAGES
-const Index = React.lazy(() => import('./pages/Index'));
-const WebDev = React.lazy(() => import('./pages/WebDev'));
-const Planes = React.lazy(() => import("./pages/Planes"));
-const Pages = React.lazy(() => import("./pages/Pages"));
-const Page = React.lazy(() => import("./pages/Page"));
-const Page404 = React.lazy(() => import("./pages/Page404"));
+import Index from './pages/Index';
+import WebDev from './pages/WebDev';
+import Planes from './pages/Planes';
+import Pages from './pages/Pages';
+import Page from './pages/Page';
+import Page404 from './pages/Page404';
 
 // COMPONENTES
-const MobileMenu = React.lazy(() => import('./components/MobileMenu'));
-const OrderPlan = React.lazy(() => import('./components/order/OrderPlan'));
-const Nav = React.lazy(() => import('./components/Nav'));
-const Footer = React.lazy(() => import('./components/Footer')); 
-const WppButton = React.lazy(() => import('./components/WppButton')); 
+import MobileMenu from './components/MobileMenu';
+import OrderPlan from './components/order/OrderPlan';
+import Nav from './components/Nav';
+import Footer from './components/Footer';
 
 
 //MIXINS
-const ScrollToTopComponent = React.lazy(() => import("./mixins/ScrollToTop"));
+import ScrollToTopComponent from './mixins/ScrollToTop';
+
+let history
+if (typeof document !== 'undefined') {
+  const createBrowserHistory = require('history/createBrowserHistory').default
+
+  history = createBrowserHistory()
+}
+export default history;
 
 export default function App() {
 
@@ -56,7 +62,6 @@ export default function App() {
   }
 
   return (
-    <React.Suspense fallback={<div style={spin}><Spin tip="1tiendaonline" /></div>}>
     <Layout style={{background: 'linear-gradient(-35deg, #f7fbff, white)'}}>
       <Router>
         <ScrollToTopComponent />
@@ -80,10 +85,8 @@ export default function App() {
               <Route component={Page404}/>
           </Switch>
           <Footer/>
-          <WppButton/>
         </contextoGlobal.Provider>
       </Router>
     </Layout>
-    </React.Suspense>
   )
 }

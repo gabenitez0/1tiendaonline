@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { contextoGlobal } from '../../../estado/contextoGlobal';
 
-import { Col, Row, Typography, Spin, Space, Checkbox, Select } from 'antd';
+import { Col, Row, Typography, Spin, Space, Checkbox, Select, Popover } from 'antd';
 const { Option } = Select;
 
 const { Text } = Typography;
@@ -74,7 +74,7 @@ function SelectDomainServices({ data, title }) {
 
   const minWidth = {
     width: '100%',
-    minWidth: 75
+    minWidth: 80
   }
 
   return (
@@ -84,6 +84,7 @@ function SelectDomainServices({ data, title }) {
       <Row gutter={8} align="middle">
         <Col flex="1 0 0">
           <Space direction="vertical">
+            <Text strong>Nombres de Dominio</Text>
             {data.map(service => (
               <Checkbox
                 key={service.id}
@@ -100,16 +101,18 @@ function SelectDomainServices({ data, title }) {
                 }
                 onChange={handleCheckboxChange}
               >
-                {service.name}
+                <Popover content={service.desc}><Text className="popover_planes">{service.name}</Text></Popover>
               </Checkbox>
             ))}
           </Space>
         </Col>
         <Col flex="75px">
           <Space direction="vertical" style={minWidth}>
+            <Text strong>Tiempo</Text>
             {data.map(service => (
               <Select 
                 key={service.id}
+                style={minWidth}
                 size="small"
                 value={
                   orden.servicioDominio.length !== 0 && orden.servicioDominio.map(item => item.id).includes(service.id)
@@ -134,8 +137,9 @@ function SelectDomainServices({ data, title }) {
             ))}
           </Space>
         </Col>
-        <Col flex="65px" style={{ textAlign: "right" }}>
+        <Col flex="65px" className="pricePaso1">
           <Space direction="vertical">
+            <Text strong>Precio</Text>
             {data.map(service => (
               <Text key={service.id}>
                 ${

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import {Link} from 'react-router-dom';
 
 import { contextoGlobal } from '../../../estado/contextoGlobal';
 
@@ -6,7 +7,7 @@ import { Typography, Select, Row, Col } from 'antd';
 const { Text } = Typography;
 const { Option } = Select
 
-export default function SelectPlan({ data }) {
+export default function SelectPlan({ data, handleOnDrawerClose }) {
 
     const { orden, dispatch } = useContext(contextoGlobal)
 
@@ -47,13 +48,15 @@ export default function SelectPlan({ data }) {
 
     return (
         <Row align="middle" justify="space-between">
-            <Col flex="1 0 170px">
-                <Text strong>Plan de tienda</Text>
+            <Col flex="1 0 0">
+                <Text strong>Plan de tienda</Text><br/>
+                <Link to="/planes" onClick={handleOnDrawerClose}>Ver planes</Link>
             </Col>
-            <Col flex="1 0 150px">
+            <Col flex="1 0 0">
                 <Select 
                     defaultValue={orden.planTienda.name !== undefined ? orden.planTienda.name : "Seleccionar"}
                     onChange={handleOnChange}
+                    style={{minWidth: 200}}
                 >    
                 {data.map(e =>
                     <Option
@@ -69,7 +72,7 @@ export default function SelectPlan({ data }) {
                     </Option>
                 </Select>
             </Col>
-            <Col flex="0 0 65px" style={{textAlign: "right"}}>
+            <Col flex="0 0 65px" className="pricePaso1">
                 <Text>
                     ${ orden.planTienda.total !== undefined ? orden.planTienda.total : price }<sub style={{bottom: '-1px'}}>/mes</sub>
                 </Text>

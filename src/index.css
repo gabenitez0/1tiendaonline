@@ -4,16 +4,11 @@ body, html{
 }
 
 .container{
+    width: 100%;
     max-width: 1140px;
     padding-right: 48px!important;
     padding-left: 48px!important;
     margin: auto;
-}
-@media (max-width: 425px){
-    .container{
-        padding-right: 16px!important;
-        padding-left: 16px!important;        
-    }
 }
 
 .noBg{
@@ -29,6 +24,14 @@ body, html{
 .popover_planes:hover{
     cursor: help;
 }
+.footer-col{
+    width: 100%;
+    flex-wrap: wrap;
+}
+.footer-col > .ant-space-item{
+    width: calc(25% - 24px);
+    margin-bottom: 40px;
+}
 
 .ta-right{
     text-align: right!important;
@@ -36,4 +39,57 @@ body, html{
 
 .paypal-buttons-context-iframe{
     vertical-align: middle;
+}
+
+.pricePaso1{
+    text-align: right;
+}
+
+.text-loading{
+    margin: 64px auto;
+    min-height: calc(100vh - 479px)
+}
+
+#CrearOrden .ant-form-item{
+    margin-bottom: 16px
+}
+
+h1.ant-typography, .ant-typography h1, #feature h2.ant-typography, #feature .ant-typography h2{
+    color: #114c7d!important
+}
+
+.pages p, .pages ol, .pages ul{
+    font-size: 20px;
+}
+
+@media (max-width: 767px){
+    .footer-col > .ant-space-item{
+        width: calc(50% - 24px);
+    }
+}
+@media (max-width: 450px){
+    .container{
+        padding-right: 16px!important;
+        padding-left: 16px!important;        
+    }
+    .footer-col > .ant-space-item{
+        width: 100%;
+        margin-right: 0!important;
+        text-align: center;
+    }
+    .pricePaso1{
+        display: none;
+    }
+    .ant-drawer-body, .ant-drawer-header{
+        padding: 16px!important;
+    }
+    h1.ant-typography, .ant-typography h1{
+        font-size: 30px!important;
+    }
+    h2.ant-typography, .ant-typography h2{
+        font-size: 24px!important;
+    }
+    .pages p, .pages ol, .pages ul{
+        font-size: 18px;
+    }
 }

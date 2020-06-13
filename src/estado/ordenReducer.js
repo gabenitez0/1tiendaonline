@@ -1,4 +1,6 @@
-const estadoDeLocalStorage = JSON.parse(localStorage.getItem('state'));
+if(process.browser) {
+var estadoDeLocalStorage = JSON.parse(localStorage.getItem('state'));
+}
 
 export let estadoInicial;
 if (estadoDeLocalStorage === null || undefined) {

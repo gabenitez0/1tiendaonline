@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { contextoGlobal } from '../../../estado/contextoGlobal';
 
-import { Typography, Space, Row, Col, Checkbox, Spin, Select } from 'antd';
+import { Typography, Space, Row, Col, Checkbox, Spin, Select, Popover } from 'antd';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -82,7 +82,7 @@ function SelectGraphicServices({ title, data }) {
 
     const minWidth = {
         width: '100%',
-        minWidth: 75
+        minWidth: 80
     }
 
     return (
@@ -92,6 +92,7 @@ function SelectGraphicServices({ title, data }) {
             <Row gutter={8} align="middle">
                 <Col flex="1 0 0">
                     <Space direction="vertical">
+                        <Text strong>Servicios de Diseño</Text>
                         {data.map(service => (
                             <Checkbox
                                 key={service.id}
@@ -105,16 +106,18 @@ function SelectGraphicServices({ title, data }) {
                                     false
                                 }
                             >
-                                {service.name}
+                                <Popover content={service.desc}><Text className="popover_planes">{service.name}</Text></Popover>
                             </Checkbox>
                         ))}
                     </Space>
                 </Col>
                 <Col flex="75px">
                     <Space direction="vertical" style={minWidth}>
+                        <Text strong>Cantidad</Text>
                         {data.map(service => (
                             <Select
                                 key={service.id}
+                                style={minWidth}
                                 size="small"
                                 onChange={onSelectChange}
                                 value={
@@ -146,8 +149,9 @@ function SelectGraphicServices({ title, data }) {
                         ))}
                     </Space>
                 </Col>
-                <Col flex="65px" style={{ textAlign: "right" }}>
+                <Col flex="65px" className="pricePaso1">
                     <Space direction="vertical">
+                        <Text strong>Precio</Text>
                         {data.map(service => (
                             <Text key={service.id}>
                                 ${
