@@ -46,13 +46,31 @@ export default function MercadoPago({changeStep}) {
         ]
     };
 
+    preference = {
+        items: [
+          {
+            title: 'Mi producto',
+            unit_price: 100,
+            quantity: 1,
+          }
+        ]
+      };
+
     mercadopago.preferences
         .create(preference)
         .then(async function(response) {
         console.log(response);
         // Este valor reemplazará el string "$$init_point$$" en tu HTML
-        const res = await response;
-        /* global.init_point = response.body.init_point; */
+        const script = document.createElement("script");
+    
+        script.src = "https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js";
+        script.async = true;
+        script.setAttribute('data-preference-id', response.body.id)
+        
+        let form = document.getElementById('btn-mepa');
+        if(!global.init_point) form.appendChild(script);
+            global.init_point = response.body.init_point;
+
         })
         .catch(function(error) {
             message.error(error)
@@ -60,9 +78,6 @@ export default function MercadoPago({changeStep}) {
         });
 
     return (
-            <script
-            src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
-            data-preference-id={res}
-            ></script>
+            <form action="/procesar" id="btn-mepa" ></form>
     );
 }
