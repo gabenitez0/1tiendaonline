@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 import { contextoGlobal } from '../../estado/contextoGlobal';
 
@@ -406,15 +407,15 @@ export default function OrderPlan (props) {
                 }
                 {orden.metodoDePago === "MercadoPago" && <>
                   <MercadoPago changeStep={changeStep} />
-                  {/* <Button 
-                  type="primary"
-                  onClick={() => {
-                    setContactVisible(true)
-                    setContactData(dataMercadoPago)
-                  }}>
-                      MercadoPago
-                  </Button> */} </>
-                }
+                  
+                  {window.location.search === "?compra-exitosa" && (
+                      message.success('¡Compra realizada con exito!'),
+                      changeStep()
+                  )}
+                  {window.location.search === "?compra-denegada" && (
+                      message.error('Hubo un error en el proceso de pago.')
+                  )}
+                </>}
                 {orden.metodoDePago === "Transferencia Bancaria" &&
                   <Button 
                   type="primary" 
@@ -435,9 +436,11 @@ export default function OrderPlan (props) {
               )
               }
               {orden.stateCurrent === steps.length -1 &&
-                <Button 
+                <Link to="/">
+                  <Button 
                   type="primary"
                   onClick={() => {
+                    handleOnDrawerClose()
                     dispatch({
                       type: 'toggleDrawer',
                       payload: {
@@ -455,6 +458,7 @@ export default function OrderPlan (props) {
                   >
                     Terminar
                   </Button>
+                </Link>
               }
               </Space>
             </Col>

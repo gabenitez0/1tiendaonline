@@ -14,7 +14,7 @@ if (estadoDeLocalStorage === null || undefined) {
       {
         id: "s3rvIc10oBl1g4tor1o",
         name: "Instalación, configuración inicial y soporte técnico por chat",
-        total: 2000
+        total: 1000
       }
     ],
     stateCurrent: 0,
@@ -43,7 +43,7 @@ export const ordenReducer = (state, action) => {
           {
             id: "s3rvIc10oBl1g4tor1o",
             name: "Instalación, configuración inicial y soporte técnico por chat",
-            total: 2000
+            total: 1000
           }
         ],
         stateCurrent: 0,

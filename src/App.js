@@ -7,7 +7,6 @@ import { ordenReducer, estadoInicial } from './estado/ordenReducer';
 
 //DEPENDENCIAS
 import { Spin } from 'antd';
-import Contacto from './components/Contacto';
 const Layout = React.lazy(() => import('antd/lib/layout'));
 
 //PAGES
@@ -22,7 +21,8 @@ const Page404 = React.lazy(() => import("./pages/Page404"));
 const MobileMenu = React.lazy(() => import('./components/MobileMenu'));
 const OrderPlan = React.lazy(() => import('./components/order/OrderPlan'));
 const Nav = React.lazy(() => import('./components/Nav'));
-const Footer = React.lazy(() => import('./components/Footer')); 
+const Footer = React.lazy(() => import('./components/Footer'));
+const Contacto = React.lazy(() => import('./components/Contacto'));
 const WppButton = React.lazy(() => import('./components/WppButton')); 
 
 

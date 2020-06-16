@@ -10,6 +10,8 @@ import {Layout, Typography, Row, Col, Space, Popover, Card, Tag, Divider, Button
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
+const FAQ = React.lazy(() => import("../components/FAQ"));
+
 export default function Planes(props) {
 
     // eslint-disable-next-line no-unused-vars
@@ -34,7 +36,7 @@ export default function Planes(props) {
         minHeight: '85vh'
     }
     const plan = {
-        background: '#fafdff',
+        background: '#fff',
         boxShadow: '0 2px 5px 1px rgba(111,158,188,.08), 0 5px 15px 6px rgba(74,142,254,.06)'
     }
     const planTitle = {
@@ -44,7 +46,7 @@ export default function Planes(props) {
         margin: '0'
     }
 
-    return (
+    return ( <>
         <section id="planes" style={planes}>
             <Helmet>
                 <link rel="canonical" href="https://1tiendaonline.com/planes" />
@@ -106,5 +108,6 @@ export default function Planes(props) {
                 </Row>
             </Content>
         </section>
-    )
+        <FAQ />
+    </>)
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { BankOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import {Modal, Button, Typography, Space} from 'antd';
@@ -6,6 +6,18 @@ const {Text} = Typography;
 
 
 export default function Contacto({contactData, contactVisible, setContactVisible, changeStep}) {
+  
+  const [buttonLoading, setButtonloading] = useState(false)
+
+  function enterLoading(){
+    setButtonloading(true)
+
+    setTimeout(() => {
+      setButtonloading(false)
+      setContactVisible(false)
+      changeStep()
+    }, 1000)
+  }
 
   return (
     contactData.map(data =>
@@ -38,10 +50,8 @@ export default function Contacto({contactData, contactVisible, setContactVisible
             <Button 
             key={2}
             type="primary" 
-            onClick={() => {
-                setContactVisible(false)
-                changeStep()
-            }}>
+            loading={buttonLoading}
+            onClick={() => enterLoading()}>
                 {data.button2}
             </Button>
         </Space>

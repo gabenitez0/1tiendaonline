@@ -37,7 +37,7 @@ export default function Product({changeStep}) {
           });
         },
         onApprove: async (data, actions) => {
-          message.success('Pago realizado con exito.');
+          message.success('¡Compra realizada con exito!');
           changeStep();
           /* const order = await actions.order.capture();
           console.log(order); */
