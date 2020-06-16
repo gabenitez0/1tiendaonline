@@ -28,15 +28,20 @@ export default function Features ({ feature }) {
     const loading = dataFeature.length === 0 ? true : false
 
     const featureStyles = {
-        padding: '12vh 0'
+        padding: '12vh 48px',
+        maxWidth: 1140,
+        margin: 'auto'
     }
     const loadingStyle = {
-        padding: loading && '8vh 0'
+        padding: loading && '8vh 48px',
+        width: loading && '100%',
+        maxWidth: loading && 1140,
+        margin: loading && 'auto'
     }
 
     
     return (
-        <section id="feature" className="container" style={loadingStyle}>
+        <section id="feature" style={loadingStyle}>
         <Skeleton active loading={loading}>
         {dataFeature.map(e =>
             <div style={{background: e.rowReverse ? '#f7fbff' : '#fff'}} key={e.id}>
