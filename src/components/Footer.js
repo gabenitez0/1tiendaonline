@@ -10,7 +10,7 @@ export default function Footer() {
     const [dataFooter, setdataFooter] = useState([]);
     useEffect(() => {
         async function dataFooter() {
-        const res = await fetch('https://api.1tiendaonline.com/footers/')
+        const res = await fetch('https://api-1tiendaonline.herokuapp.com/footers/')
         const data = await res.json();
         setdataFooter(data)
         }

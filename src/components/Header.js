@@ -13,7 +13,7 @@ export default function Header(props) {
     const [data, setData] = useState([]);
     useEffect(() => {
         async function data() {
-            const res = await fetch('https://api.1tiendaonline.com/'+props.page)
+            const res = await fetch('https://api-1tiendaonline.herokuapp.com/'+props.page)
             const dataJson = await res.json();
             setData(dataJson);
         }
@@ -34,7 +34,7 @@ export default function Header(props) {
         textAlign: tablet ? 'center' : 'left'
     }
 
-    const api = "https://api.1tiendaonline.com";
+    const api = "https://api-1tiendaonline.herokuapp.com";
     const loading = data.length === 0 ? true : false
     
     return (

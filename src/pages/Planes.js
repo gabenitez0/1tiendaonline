@@ -20,7 +20,7 @@ export default function Planes(props) {
     const [dataPlanes, setdataPlanes] = useState([]);
     useEffect(() => {
         async function dataPlanes() {
-        const res = await fetch('https://api.1tiendaonline.com/planes/')
+        const res = await fetch('https://api-1tiendaonline.herokuapp.com/planes/')
         const data = await res.json();
         setdataPlanes(data)
         }

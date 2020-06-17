@@ -13,7 +13,7 @@ export default function Features ({ feature }) {
     const [dataFeature, setDataFeature] = useState([]);
     useEffect(() => {
         async function dataFeature() {
-            const res = await fetch('https://api.1tiendaonline.com/' + feature)
+            const res = await fetch('https://api-1tiendaonline.herokuapp.com/' + feature)
             const data = await res.json();
             setDataFeature(data)
         }
@@ -23,17 +23,18 @@ export default function Features ({ feature }) {
 
     const size = useWindowSize();
     const tablet = size.width <= 767
+    const phone = size.width <= 450
 
-    const api = "https://api.1tiendaonline.com";
+    const api = "https://api-1tiendaonline.herokuapp.com";
     const loading = dataFeature.length === 0 ? true : false
 
     const featureStyles = {
-        padding: '12vh 48px',
+        padding: phone ? '12vh 16px' : '12vh 48px',
         maxWidth: 1140,
         margin: 'auto'
     }
     const loadingStyle = {
-        padding: loading && '8vh 48px',
+        padding: loading && (phone ? '8vh 16px' : '8vh 48px'),
         width: loading && '100%',
         maxWidth: loading && 1140,
         margin: loading && 'auto'

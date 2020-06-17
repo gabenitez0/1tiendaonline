@@ -47,20 +47,20 @@ export default function OrderPlan (props) {
 
   useEffect(() => {
 
-      fetch('https://api.1tiendaonline.com/graphic-designs')
+      fetch('https://api-1tiendaonline.herokuapp.com/graphic-designs')
       .then(data => data.json())
       .then(data => setDataDesign(data));
 
-      fetch('https://api.1tiendaonline.com/marketings')
+      fetch('https://api-1tiendaonline.herokuapp.com/marketings')
         .then(res => res.json())
         .then(data => setDataMarketing(data));
 
-      fetch('https://api.1tiendaonline.com/web-services')
+      fetch('https://api-1tiendaonline.herokuapp.com/web-services')
         .then(res => res.json())
         .then(data => setDataDomain(data));
 
       async function dataPlanes() {
-        const res = await fetch('https://api.1tiendaonline.com/planes/')
+        const res = await fetch('https://api-1tiendaonline.herokuapp.com/planes/')
         const data = await res.json();
 
         setdataPlanes(data);

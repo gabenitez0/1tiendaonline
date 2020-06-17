@@ -11,7 +11,7 @@ export default function Page(props) {
     const [page, setPage] = useState([]);
     useEffect(() => {
         async function Page() {
-        const res = await fetch('https://api.1tiendaonline.com/pages/'+props.idPage)
+        const res = await fetch('https://api-1tiendaonline.herokuapp.com/pages/'+props.idPage)
         const data = await res.json();
         setPage(data)
         }

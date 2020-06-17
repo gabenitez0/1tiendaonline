@@ -15,7 +15,7 @@ export default function MobileMenu(props) {
   const [navItems, setItems] = useState([]);
   useEffect(() => {
     async function navItems() {
-      const res = await fetch('https://api.1tiendaonline.com/menus/')
+      const res = await fetch('https://api-1tiendaonline.herokuapp.com/menus/')
       const data = await res.json();
       setItems(data)
     }
