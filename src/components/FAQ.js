@@ -11,7 +11,7 @@ export default function FAQ() {
     const [data, setData] = useState([]);
     useEffect(() => {
         async function data() {
-            const res = await fetch('https://api-1tiendaonline.herokuapp.com/faq')
+            const res = await fetch('https://api.1tiendaonline.com/faq')
             const dataJson = await res.json();
             setData(dataJson);
         }

@@ -12,7 +12,7 @@ export default function CallToAction({id}) {
     const [dataCta, setdataCta] = useState([]);
     useEffect(() => {
         async function dataCta() {
-        const res = await fetch('https://api-1tiendaonline.herokuapp.com/ctas/'+id)
+        const res = await fetch('https://api.1tiendaonline.com/ctas/'+id)
         const data = await res.json();
         setdataCta(data)
         }
