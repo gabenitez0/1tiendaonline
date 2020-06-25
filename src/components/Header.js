@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 //DEPENDENCIAS
 import Fade from 'react-reveal/Fade';
@@ -74,12 +73,12 @@ export default function Header(props) {
                             </Text>
                             <Space style={{marginTop: '8px'}}>
                             {data.comment === 'index' ?
-                            <a
-                            href={data.buttonUrl}>
-                                <Button type="primary" size="large">
+                                <Button 
+                                    type="primary" 
+                                    size="large"
+                                    href={data.buttonUrl}>
                                     {data.button}
                                 </Button>
-                            </a>
                             :
                             <a
                             href={data.buttonUrl} 

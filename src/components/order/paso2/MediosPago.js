@@ -10,25 +10,25 @@ export default function MediosPago() {
     
     const mediosPago = [
         {
-            "id": "0",
+            "id": 0,
+            "name": "Transferencia Bancaria",
+            "currency": "ARS",
+            "desc": "Transferencia instantánea",
+            "url": "CBU o Alias"
+        },
+        {
+            "id": 1,
+            "name": "MercadoPago",
+            "currency": "ARS",
+            "desc": "Tarjetas de crédito, débito y efectivo",
+            "url": "https://mp.com/"
+        },
+        {
+            "id": 2,
             "name": "Paypal",
             "currency": "USD",
             "desc": "Tarjetas de crédito, débito y transferencia",
             "url": "https://paypal.com/"
-        },
-        {
-            "id": "1",
-            "name": "MercadoPago",
-            "currency": "ARS",
-            "desc": "Tarjetas de crédito, débito, efectivo y transferencia",
-            "url": "https://mp.com/"
-        },
-        {
-            "id": "2",
-            "name": "Transferencia Bancaria",
-            "currency": "ARS",
-            "desc": "Transferencia directa",
-            "url": "CBU o Alias"
         }
     ]
 
@@ -57,7 +57,11 @@ export default function MediosPago() {
                         orden.metodoDePago !== service.name && orden.estaEnProcesoDePago === true   
                     }
                 >
-                    {service.name} ({service.currency}) - {service.desc}
+                    {service.id === 0 ? 
+                    <b>{service.name} ({service.currency}) - {service.desc}</b>
+                    : 
+                    <>{service.name} ({service.currency}) - {service.desc}</>
+                    }
                 </Radio>
             )}
         </Space>
