@@ -113,7 +113,7 @@ export default function Nav (props) {
                       });
                     document.body.style.width = 'calc(100% - 17px)'
                     }}>
-                    {orden.subTotal <= 0 ? 'Empezar' : 'Continuar'}
+                    {orden.subTotal <= 0 ? 'Empezar ahora' : 'Completar Pedido'}
                   </Button>
                 </Space>
               </Row>

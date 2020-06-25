@@ -1,20 +1,14 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Helmet} from "react-helmet";
-
 import { contextoGlobal } from '../estado/contextoGlobal';
 
 //DEPENDENCIAS
 import Fade from 'react-reveal/Fade';
 /* import OrderPlan from "./order/OrderPlan"; */
-import {Layout, Typography, Row, Col, Space, Popover, Card, Tag, Divider, Button} from 'antd';
+import {Layout, Typography, Row, Col, Space, Popover, Card, Tag, Divider, Button, Skeleton} from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
-const FAQ = React.lazy(() => import("../components/FAQ"));
-
 export default function Planes(props) {
-
-    // eslint-disable-next-line no-unused-vars
     const { orden, dispatch } = useContext(contextoGlobal);
 
     const [dataPlanes, setdataPlanes] = useState([]);
@@ -27,16 +21,14 @@ export default function Planes(props) {
         dataPlanes()
     }, [])
 
-    const planesTitle = {
-        margin: '64px 0'
-    }
     const planes = {
         textAlign: 'center',
-        margin: '32px 0',
-        minHeight: '85vh'
+        padding: '12vh 0',
+        minHeight: '85vh',
+        background: 'white'
     }
     const plan = {
-        background: '#fff',
+        background: '#fafdff',
         boxShadow: '0 2px 5px 1px rgba(111,158,188,.08), 0 5px 15px 6px rgba(74,142,254,.06)'
     }
     const planTitle = {
@@ -46,20 +38,16 @@ export default function Planes(props) {
         margin: '0'
     }
 
-    return ( <>
-        <section id="planes" style={planes}>
-            <Helmet>
-                <link rel="canonical" href="https://1tiendaonline.com/planes" />
-                <title>Nuestros Planes de Tienda Online - 1tiendaonline</title>
-                <meta name="description" content="Conoce nuestros planes de ecommerce. Creamos tu Tienda Online Autoadministrable con Tiendanube y Shopify."/>
-                <meta name="keywords" content="planes, precios, tienda online, tienda digital, e-commerce, ecommerce, redes sociales, emprendimiento, emprendedor, ventas, compras, ropa, instagram, facebook, prestashop, woocommerce, tiendanube, shopify"></meta>
-            </Helmet>
+    const loading = dataPlanes.length === 0 ? true : false
 
+    return (
+        <section id="planes" style={planes}>
             <Content className="container">
+                <Skeleton active loading={loading}>
                 <Fade>
-                <Space direction="vertical" size={8} style={planesTitle}>
-                    <Title style={{margin: '0'}}>Armá tu plan</Title>
-                    <Text strong>Tu tienda online a medida hoy</Text>
+                <Space direction="vertical" size={8}>
+                    <Title style={{margin: '0'}}>Empezá a Automatizar tus Ventas Ahora</Title>
+                    <Text strong>Plataforma NEXT-GEN</Text>
                     <Button 
                         type="primary" 
                         style={{marginTop: '8px'}} 
@@ -73,15 +61,15 @@ export default function Planes(props) {
                           document.body.style.width = 'calc(100% - 17px)'
                           }}
                     >
-                        {orden.subTotal <= 0 ? 'Empezar' : 'Continuar'}
+                        {orden.subTotal <= 0 ? 'Empezar Ahora' : 'Completar Pedido'}
                     </Button>
                 </Space>
                 </Fade>
                 
-                <Row gutter={[16, 16]} justify="center">
+                <Row gutter={[16, 16]} justify="center" style={{margin: '48px 0'}}>
                     {dataPlanes.map(e =>
                     <Col lg={8} sm={12} xs={24} key={e.id}>
-                    <Fade>
+                    <Fade bottom>
                         <Card style={plan}>
                         <Space direction="vertical" size={16}>
                             <Space direction="vertical" size={8}>
@@ -106,8 +94,25 @@ export default function Planes(props) {
                     </Col>
                     )}
                 </Row>
+                
+                <Button 
+                    type="primary" 
+                    size="large"
+                    style={{marginTop: '8px'}} 
+                    onClick={() => {
+                        dispatch({
+                            type: 'toggleDrawer',
+                            payload: {
+                            visible: true
+                            }
+                        });
+                        document.body.style.width = 'calc(100% - 17px)'
+                        }}
+                >
+                    {orden.subTotal <= 0 ? 'Empezar Ahora' : 'Completar Pedido'}
+                </Button>
+                </Skeleton>
             </Content>
         </section>
-        <FAQ />
-    </>)
+    )
 }

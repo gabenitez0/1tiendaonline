@@ -73,6 +73,14 @@ export default function Header(props) {
                                 {data.desc}
                             </Text>
                             <Space style={{marginTop: '8px'}}>
+                            {data.comment === 'index' ?
+                            <a
+                            href={data.buttonUrl}>
+                                <Button type="primary" size="large">
+                                    {data.button}
+                                </Button>
+                            </a>
+                            :
                             <a
                             href={data.buttonUrl} 
                             target="_blank" 
@@ -82,12 +90,19 @@ export default function Header(props) {
                                     {data.button}
                                 </Button>
                             </a>
+                            }
                             {data.comment === 'index' &&
-                            <Link to="/planes">
+                            <a 
+                            id="tag-contacto" 
+                            href="https://api.whatsapp.com/send?phone=5491122542474"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >
                                 <Button type="link">
-                                    Ver planes
+                                    Tengo una duda
                                 </Button>
-                            </Link>}
+                            </a>
+                            }
                             </Space>
                         </Space>
                     </Col>

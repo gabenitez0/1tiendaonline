@@ -4,6 +4,8 @@ import {Helmet} from "react-helmet";
 import Header from '../components/Header';
 const Features = React.lazy(() => import('../components/Features'));
 const CallToAction = React.lazy(() => import('../components/CallToAction'));
+const Planes = React.lazy(() => import('../components/Planes'));
+const FAQ = React.lazy(() => import('../components/FAQ'));
 
 export default function index() {
     return (
@@ -17,7 +19,8 @@ export default function index() {
 
             <Header page="header"/>
             <Features feature="features"/>
-            <CallToAction id="5ea68f072d0f565713cc7036" />
+            <Planes />
+            <FAQ />
         </>
     )
 }
